@@ -8,7 +8,7 @@ export default function Header() {
         <div className="flex items-center">
           <img src={logo} alt="Destiny Library Logo" className="h-10 mr-2" /> {/* Adjust height and margin as needed */}
           <Link to='/'>
-            <h1 className='font-bold text-xl'>Destiny Library</h1>
+            <h1 className='font-bold text-xl'>EduCode</h1>
           </Link>
         </div>
         <ul className='flex gap-4'>
