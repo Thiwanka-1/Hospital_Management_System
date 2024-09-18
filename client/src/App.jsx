@@ -6,6 +6,10 @@ import SignUp from './pages/SignUp';
 import Profile from './pages/Profile';
 import Header from './components/Header';
 import PrivateRoute from './components/PrivateRoute';
+import ProjectEditor from './components/ProjectEditor';
+import ProjectList from './components/ProjectList';
+import IDELayout from './components/IDELayout';
+
 
 export default function App() {
   return <BrowserRouter>
@@ -17,6 +21,9 @@ export default function App() {
       <Route path = "/sign-up" element = {<SignUp />} />
       <Route element={<PrivateRoute />}>
         <Route path = "/profile" element = {<Profile />} />
+        <Route path="/ide" element={<IDELayout />} />              
+        <Route path="/projects" element={<ProjectList />} />      
+        <Route path="/editor/:id" element={<ProjectEditor />} /> 
       </Route>
     </Routes>
   
