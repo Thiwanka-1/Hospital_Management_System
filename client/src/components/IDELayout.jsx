@@ -15,7 +15,6 @@ const IDELayout = () => {
 
   const runCode = async () => {
     setStatus("Loading...");
-    console.log("Sending request to run code:", { language, code, input });
     try {
       const response = await fetch("http://localhost:3000/ide/runCode", {
         method: "POST",
@@ -34,14 +33,13 @@ const IDELayout = () => {
       setStatus("Run");
     }
   };
-  
 
   const saveProject = async () => {
     if (!projectName) {
       alert("Please enter a project name.");
       return;
     }
-  
+
     try {
       const response = await fetch("http://localhost:3000/project/projects", {
         method: "POST",
@@ -51,9 +49,9 @@ const IDELayout = () => {
         body: JSON.stringify({ name: projectName, code, language }),
         credentials: "include", // Ensure the user session or JWT token is sent
       });
-  
+
       const data = await response.json();
-  
+
       if (data.success) {
         navigate("/projects");
       } else {
@@ -63,7 +61,7 @@ const IDELayout = () => {
       console.error("Error saving project:", error);
     }
   };
-  
+
   const handleSave = () => {
     setShowPopup(true);
   };
@@ -155,10 +153,7 @@ const IDELayout = () => {
 
       <div className="flex">
         <div className="w-2/3 pr-4">
-          <div
-            className="bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-4"
-            style={{ height: "720px" }}
-          >
+          <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-4" style={{ height: '720px' }}>
             <h3 className="text-lg text-gray-400 mb-2">Editor</h3>
             <MonacoEditor
               height="90%"
@@ -170,11 +165,8 @@ const IDELayout = () => {
           </div>
         </div>
 
-        <div className="w-1/3 flex flex-col space-y-4" style={{ height: "600px" }}>
-          <div
-            className="bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-4"
-            style={{ height: "350px" }}
-          >
+        <div className="w-1/3 flex flex-col space-y-4" style={{ height: '600px' }}>
+          <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-4" style={{ height: '350px' }}>
             <h3 className="text-lg text-gray-400 mb-2">Input Parameters</h3>
             <MonacoEditor
               height="90%"
@@ -185,10 +177,7 @@ const IDELayout = () => {
             />
           </div>
 
-          <div
-            className="bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-4"
-            style={{ height: "350px" }}
-          >
+          <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-4" style={{ height: '350px' }}>
             <h3 className="text-lg text-gray-400 mb-2">Output Logs</h3>
             <MonacoEditor
               height="90%"

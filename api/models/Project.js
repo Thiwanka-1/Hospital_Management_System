@@ -16,7 +16,7 @@ const projectSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true, // Ensure that a project is always tied to a user
+    required: true,
   },
   createdAt: {
     type: Date,

@@ -1,31 +1,24 @@
 import { Project } from '../models/Project.js';
 
-// Get all projects for the authenticated user
+// Get all projects for the logged-in user
 export const getProjects = async (req, res) => {
   try {
-    const projects = await Project.find({ user: req.user.id }); // Fetch only the projects for the authenticated user
+    const projects = await Project.find({ user: req.user.id }); // Filter by user ID
     res.status(200).json(projects);
   } catch (error) {
     res.status(500).json({ message: 'Failed to retrieve projects' });
   }
 };
 
-
-// Create new project
-// Create new project
+// Create a new project for the logged-in user
 export const createProject = async (req, res) => {
   const { name, code, language } = req.body;
   try {
-    const newProject = new Project({
-      name,
-      code,
-      language,
-      user: req.user.id,  // Associate the project with the authenticated user's ID
-    });
+    const newProject = new Project({ name, code, language, user: req.user.id }); // Assign user ID
     await newProject.save();
     res.status(201).json({ success: true, project: newProject });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Failed to create project' });
+    res.status(500).json({ message: 'Failed to create project' });
   }
 };
 
