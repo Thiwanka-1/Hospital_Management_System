@@ -14,3 +14,4 @@ export const verifyToken = (req, res, next) => {
     next(); // Continue to the next middleware or route handler
   });
 };
+

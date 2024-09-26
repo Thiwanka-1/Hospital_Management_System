@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import MonacoEditor from "@monaco-editor/react";
 
@@ -11,7 +11,23 @@ const IDELayout = () => {
   const [showPopup, setShowPopup] = useState(false); // For project name popup
   const [projectName, setProjectName] = useState(""); // For project name
 
+  // Toggle theme between dark and light
+  const [isDarkMode, setIsDarkMode] = useState(
+    localStorage.getItem("theme") === "dark"
+  );
+
   const navigate = useNavigate();
+
+  // Handle theme change and save to localStorage
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDarkMode]);
 
   const runCode = async () => {
     setStatus("Loading...");
@@ -84,7 +100,7 @@ const IDELayout = () => {
   ];
 
   return (
-    <div className="bg-gray-900 min-h-screen p-6">
+    <div className={`min-h-screen p-6 ${isDarkMode ? "bg-gray-900" : "bg-white"}`}>
       {/* Popup for Project Name */}
       {showPopup && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
@@ -115,13 +131,16 @@ const IDELayout = () => {
         </div>
       )}
 
-      <header className="bg-gray-800 text-white py-4 mb-6 rounded-lg shadow-lg">
+      <header
+        className={`py-4 mb-6 rounded-lg shadow-lg ${isDarkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-black"
+          }`}
+      >
         <div className="container mx-auto text-center">
           <h1 className="text-3xl font-bold">EduCode IDE</h1>
           <div className="mt-4 flex justify-center items-center space-x-4">
             <select
               onChange={(e) => setLanguage(e.target.value)}
-              className="border border-gray-600 bg-gray-700 text-white px-4 py-2 rounded w-48"
+              className={`border ${isDarkMode ? "bg-gray-700 text-white" : "bg-white text-black"} px-4 py-2 rounded w-48`}
               value={language}
             >
               {languages.map((lang) => (
@@ -147,43 +166,59 @@ const IDELayout = () => {
             >
               Save Project
             </button>
+            {/* Theme Toggle Button */}
+            <button
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className={`bg-${isDarkMode ? "yellow" : "gray"}-500 text-white px-4 py-2 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105`}
+            >
+              {isDarkMode ? "Light Mode" : "Dark Mode"}
+            </button>
           </div>
         </div>
       </header>
 
       <div className="flex">
         <div className="w-2/3 pr-4">
-          <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-4" style={{ height: '720px' }}>
-            <h3 className="text-lg text-gray-400 mb-2">Editor</h3>
+          <div
+            className={`border ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300"} rounded-lg shadow-lg p-4`}
+            style={{ height: "720px" }}
+          >
+            <h3 className={`text-lg ${isDarkMode ? "text-gray-400" : "text-gray-700"} mb-2`}>Editor</h3>
             <MonacoEditor
               height="90%"
               defaultLanguage={language}
               value={code}
-              theme="vs-dark"
+              theme={isDarkMode ? "vs-dark" : "vs-light"}
               onChange={(newValue) => setCode(newValue)}
             />
           </div>
         </div>
 
-        <div className="w-1/3 flex flex-col space-y-4" style={{ height: '600px' }}>
-          <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-4" style={{ height: '350px' }}>
-            <h3 className="text-lg text-gray-400 mb-2">Input Parameters</h3>
+        <div className="w-1/3 flex flex-col space-y-4" style={{ height: "600px" }}>
+          <div
+            className={`border ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300"} rounded-lg shadow-lg p-4`}
+            style={{ height: "350px" }}
+          >
+            <h3 className={`text-lg ${isDarkMode ? "text-gray-400" : "text-gray-700"} mb-2`}>Input Parameters</h3>
             <MonacoEditor
               height="90%"
               defaultLanguage="text"
               value={input}
-              theme="vs-dark"
+              theme={isDarkMode ? "vs-dark" : "vs-light"}
               onChange={(newValue) => setInput(newValue)}
             />
           </div>
 
-          <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-4" style={{ height: '350px' }}>
-            <h3 className="text-lg text-gray-400 mb-2">Output Logs</h3>
+          <div
+            className={`border ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300"} rounded-lg shadow-lg p-4`}
+            style={{ height: "350px" }}
+          >
+            <h3 className={`text-lg ${isDarkMode ? "text-gray-400" : "text-gray-700"} mb-2`}>Output Logs</h3>
             <MonacoEditor
               height="90%"
               defaultLanguage="text"
               value={outputLogs}
-              theme="vs-dark"
+              theme={isDarkMode ? "vs-dark" : "vs-light"}
               options={{ readOnly: true }}
             />
           </div>

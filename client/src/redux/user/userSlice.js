@@ -26,7 +26,8 @@ const userSlice = createSlice({
       state.loading = true;
     },
     updateUserSuccess: (state, action) => {
-      state.currentUser = action.payload;
+      // Ensure isAdmin flag is preserved when updating the user
+      state.currentUser = { ...state.currentUser, ...action.payload, isAdmin: action.payload.isAdmin };
       state.loading = false;
       state.error = false;
     },

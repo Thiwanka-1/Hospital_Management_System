@@ -8,6 +8,8 @@ import userRoutes from './routes/user.route.js';
 import authRoutes from './routes/auth.route.js';
 import projectRoutes from './routes/projectRoutes.js'; // Your project CRUD routes
 import routes from './routes/routes.js'; 
+import contactRoutes from './routes/contactRoutes.js';
+
 
 // Load environment variables
 dotenv.config();
@@ -46,6 +48,8 @@ app.use("/api/user", userRoutes);  // User management routes
 app.use("/api/auth", authRoutes);  // Authentication routes
 app.use('/project', projectRoutes);  // Project CRUD routes
 app.use('/ide', routes);            // IDE code execution routes
+app.use('/api', contactRoutes);
+
 
 // Global error handling middleware
 app.use((err, req, res, next) => {

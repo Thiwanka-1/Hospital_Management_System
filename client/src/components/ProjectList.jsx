@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const ProjectList = () => {
   const [projects, setProjects] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(""); // State to store the search input
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,12 +38,30 @@ const ProjectList = () => {
     navigate(`/editor/${id}`);
   };
 
+  // Filter projects based on search term (matches both name and language)
+  const filteredProjects = projects.filter((project) =>
+    project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    project.language.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="container mx-auto mt-8">
       <h1 className="text-3xl font-bold text-black text-center mb-6">Project List</h1>
-      {projects.length > 0 ? (
+
+      {/* Search Bar */}
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="Search projects by name or language..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500"
+        />
+      </div>
+
+      {filteredProjects.length > 0 ? (
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project) => (
+          {filteredProjects.map((project) => (
             <li
               key={project._id}
               className="bg-gray-800 border border-gray-700 p-6 rounded-lg shadow-lg"
