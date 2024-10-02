@@ -14,6 +14,14 @@ import ManageUsers from './pages/ManageUsers';
 import ContactUs from './pages/ContactUs';
 import ViewMessages from './pages/ViewMessages';
 
+//quiz
+import Exam from "./pages/quiz/Exam";
+import ExamWrite from "./pages/quiz/WriteExam";
+import PlayQuiz from "./pages/quiz/PlayQuiz";
+import AddEditExam from "./pages/quiz/AddEditExam";
+import UserExamReport from "./pages/quiz/UserExamReport";
+import AdminExamReports from "./pages/quiz/AdminExamReports";
+
 
 export default function App() {
   return <BrowserRouter>
@@ -29,7 +37,11 @@ export default function App() {
         <Route path = "/profile" element = {<Profile />} />
         <Route path="/ide" element={<IDELayout />} />              
         <Route path="/projects" element={<ProjectList />} />      
-        <Route path="/editor/:id" element={<ProjectEditor />} /> 
+        <Route path="/editor/:id" element={<ProjectEditor />} />
+
+        <Route path="/play-quiz" element={<PlayQuiz />} />
+        <Route path="/exam-write/:id" element={<ExamWrite />} />
+        <Route path="/user-exam-report" element={<UserExamReport />} /> 
         
       </Route>
 
@@ -37,6 +49,11 @@ export default function App() {
         <Route path="/manage-users" element={<ManageUsers />} />
         <Route path='/admin-profile' element={<AdminProfile />} />
         <Route path='/messages' element={<ViewMessages />} />
+
+        <Route path="/exam" element={<Exam />} />
+        <Route path="/exam-add" element={<AddEditExam />} />
+        <Route path="/exam-add/:id" element={<AddEditExam />} />
+        <Route path="/admin-exam-report" element={<AdminExamReports />} />
       </Route>
     </Routes>
   

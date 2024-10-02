@@ -9,6 +9,8 @@ import authRoutes from './routes/auth.route.js';
 import projectRoutes from './routes/projectRoutes.js'; // Your project CRUD routes
 import routes from './routes/routes.js'; 
 import contactRoutes from './routes/contactRoutes.js';
+import examsRoute from "./routes/examRoutes.js";
+import examsReportRoute from "./routes/examsReportRoute.js";
 
 
 // Load environment variables
@@ -49,7 +51,8 @@ app.use("/api/auth", authRoutes);  // Authentication routes
 app.use('/project', projectRoutes);  // Project CRUD routes
 app.use('/ide', routes);            // IDE code execution routes
 app.use('/api', contactRoutes);
-
+app.use("/api/exams", examsRoute);
+app.use("/api/examsReport", examsReportRoute);
 
 // Global error handling middleware
 app.use((err, req, res, next) => {

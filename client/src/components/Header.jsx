@@ -24,6 +24,9 @@ export default function Header() {
           <li>
             <Link to='/contact'>Contact Us</Link>
           </li>
+          <li>
+            <Link to="/play-quiz">Play Quiz</Link>
+          </li>
           {/* Conditionally render the IDE link based on user authentication */}
           <li>
             <Link to='/ide'>IDE</Link>

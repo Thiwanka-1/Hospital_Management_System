@@ -9,10 +9,36 @@ export default function ContactUs() {
   const [statusMessage, setStatusMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Error message states for each field
+  const [nameError, setNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [messageError, setMessageError] = useState('');
+
   const handleChange = (e) => {
+    const { id, value } = e.target;
+
+    if (id === 'name') {
+      const nameRegex = /^[A-Za-z\s]*$/;
+      if (!nameRegex.test(value)) {
+        setNameError('Only letters and spaces are allowed.');
+        return;
+      } else {
+        setNameError(''); // Clear error if valid
+      }
+    }
+
+    if (id === 'email') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(value)) {
+        setEmailError('Please enter a valid email address.');
+      } else {
+        setEmailError(''); // Clear error if valid
+      }
+    }
+
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value,
+      [id]: value,
     });
   };
 
@@ -20,6 +46,41 @@ export default function ContactUs() {
     e.preventDefault();
     setIsSubmitting(true);
     setStatusMessage('');
+
+    const nameRegex = /^[A-Za-z\s]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    let valid = true;
+
+    // Validate name
+    if (!nameRegex.test(formData.name)) {
+      setNameError('Please enter a valid name. Only letters and spaces are allowed.');
+      valid = false;
+    } else {
+      setNameError('');
+    }
+
+    // Validate email
+    if (!emailRegex.test(formData.email)) {
+      setEmailError('Please enter a valid email address.');
+      valid = false;
+    } else {
+      setEmailError('');
+    }
+
+    // Validate message
+    if (formData.message.trim() === '') {
+      setMessageError('Please enter a message.');
+      valid = false;
+    } else {
+      setMessageError('');
+    }
+
+    // Stop submission if any validation fails
+    if (!valid) {
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       const response = await fetch('http://localhost:3000/api/contact', {
@@ -52,7 +113,7 @@ export default function ContactUs() {
   return (
     <div className="bg-gray-100">
       {/* Hero Section */}
-      <section className="bg-green-600 text-white py-20">
+      <section className="bg-blue-600 text-white py-20">
         <div className="container mx-auto px-5 text-center">
           <h1 className="text-4xl font-bold mb-4">Contact EduCode</h1>
           <p className="text-xl mb-8">
@@ -76,10 +137,11 @@ export default function ContactUs() {
                 id="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-green-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500"
                 placeholder="Enter your name"
                 required
               />
+              {nameError && <p className="text-red-500 text-sm mt-1">{nameError}</p>}
             </div>
 
             <div className="mb-4">
@@ -89,10 +151,11 @@ export default function ContactUs() {
                 id="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-green-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500"
                 placeholder="Enter your email"
                 required
               />
+              {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
             </div>
 
             <div className="mb-4">
@@ -101,15 +164,16 @@ export default function ContactUs() {
                 id="message"
                 value={formData.message}
                 onChange={handleChange}
-                className="w-full h-32 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-green-500"
+                className="w-full h-32 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500"
                 placeholder="Enter your message"
                 required
               ></textarea>
+              {messageError && <p className="text-red-500 text-sm mt-1">{messageError}</p>}
             </div>
 
             <button
               type="submit"
-              className="bg-green-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-green-700"
+              className="bg-blue-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-blue-700"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Sending...' : 'Send Message'}
@@ -117,7 +181,7 @@ export default function ContactUs() {
 
             {/* Status Message */}
             {statusMessage && (
-              <p className="text-green-700 mt-5">{statusMessage}</p>
+              <p className="text-blue-700 mt-5">{statusMessage}</p>
             )}
           </form>
 
@@ -157,7 +221,7 @@ export default function ContactUs() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-green-600 text-white py-6 text-center">
+      <footer className="bg-blue-600 text-white py-6 text-center">
         <p>&copy; 2024 EduCode. Empowering the next generation of coders.</p>
       </footer>
     </div>

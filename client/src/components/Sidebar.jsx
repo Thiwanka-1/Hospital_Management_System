@@ -18,11 +18,6 @@ export default function Sidebar() {
         {currentUser.isAdmin && (
           <>
             <li className="mb-4">
-              <Link to="/admin-dashboard" className="hover:text-gray-300">
-                Admin Dashboard
-              </Link>
-            </li>
-            <li className="mb-4">
               <Link to="/manage-users" className="hover:text-gray-300">
                 Manage Users
               </Link>
@@ -30,6 +25,11 @@ export default function Sidebar() {
             <li className="mb-4">
               <Link to="/messages" className="hover:text-gray-300">
                 Contact Messages
+              </Link>
+            </li>
+            <li className="mb-4">
+              <Link to="/exam" className="hover:text-gray-300">
+                Exam Management
               </Link>
             </li>
           </>

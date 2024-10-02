@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="bg-gray-100">
       {/* Hero Section */}
-      <section className="bg-green-600 text-white py-20">
+      <section className="bg-blue-600 text-white py-20">
         <div className="container mx-auto px-5 text-center">
           <h1 className="text-5xl font-bold mb-4">Welcome to EduCode</h1>
           <p className="text-xl mb-8">
@@ -13,7 +13,7 @@ export default function Home() {
           </p>
           <Link
             to="/sign-up"
-            className="bg-white text-green-600 px-8 py-4 rounded-full shadow-lg hover:bg-gray-200 transition duration-300"
+            className="bg-white text-blue-600 px-8 py-4 rounded-full shadow-lg hover:bg-gray-200 transition duration-300"
           >
             Get Started
           </Link>
@@ -26,7 +26,7 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
           {/* Feature 1 */}
           <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
-            <i className="fas fa-code text-5xl text-green-600 mb-4"></i>
+            <i className="fas fa-code text-5xl text-blue-600 mb-4"></i>
             <h3 className="text-2xl font-semibold mb-4">Interactive IDE</h3>
             <p className="text-gray-600">
               Practice coding in real-time with support for multiple programming languages.
@@ -35,7 +35,7 @@ export default function Home() {
 
           {/* Feature 2 */}
           <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
-            <i className="fas fa-book text-5xl text-green-600 mb-4"></i>
+            <i className="fas fa-book text-5xl text-blue-600 mb-4"></i>
             <h3 className="text-2xl font-semibold mb-4">Courses & Tutorials</h3>
             <p className="text-gray-600">
               Learn with our step-by-step tutorials and solve coding challenges.
@@ -44,7 +44,7 @@ export default function Home() {
 
           {/* Feature 3 */}
           <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
-            <i className="fas fa-puzzle-piece text-5xl text-green-600 mb-4"></i>
+            <i className="fas fa-puzzle-piece text-5xl text-blue-600 mb-4"></i>
             <h3 className="text-2xl font-semibold mb-4">Quizzes & Games</h3>
             <p className="text-gray-600">
               Improve your coding skills with interactive quizzes and fun coding games.
@@ -66,7 +66,7 @@ export default function Home() {
               </p>
               <Link
                 to="/course/python-basics"
-                className="text-green-600 font-semibold hover:underline"
+                className="text-blue-600 font-semibold hover:underline"
               >
                 Learn More
               </Link>
@@ -80,7 +80,7 @@ export default function Home() {
               </p>
               <Link
                 to="/course/cpp-mastering"
-                className="text-green-600 font-semibold hover:underline"
+                className="text-blue-600 font-semibold hover:underline"
               >
                 Learn More
               </Link>
@@ -94,7 +94,7 @@ export default function Home() {
               </p>
               <Link
                 to="/course/fullstack-javascript"
-                className="text-green-600 font-semibold hover:underline"
+                className="text-blue-600 font-semibold hover:underline"
               >
                 Learn More
               </Link>
@@ -104,7 +104,7 @@ export default function Home() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="bg-green-50 py-20">
+      <section className="bg-blue-50 py-20">
         <div className="container mx-auto px-5">
           <h2 className="text-4xl font-bold text-center mb-10">What Our Learners Say</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
@@ -136,13 +136,13 @@ export default function Home() {
       </section>
 
       {/* Call to Action Section */}
-      <section className="bg-green-600 text-white py-20 text-center">
+      <section className="bg-blue-600 text-white py-20 text-center">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold mb-6">Start Your Coding Journey Today!</h2>
           <p className="text-xl mb-8">Join thousands of learners and improve your coding skills with EduCode.</p>
           <Link
             to="/sign-up"
-            className="bg-white text-green-600 px-8 py-4 rounded-full shadow-lg hover:bg-gray-200 transition duration-300"
+            className="bg-white text-blue-600 px-8 py-4 rounded-full shadow-lg hover:bg-gray-200 transition duration-300"
           >
             Sign Up Now
           </Link>
@@ -150,7 +150,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-green-700 text-white py-6 text-center">
+      <footer className="bg-blue-700 text-white py-6 text-center">
         <p>&copy; 2024 EduCode. Empowering the next generation of coders.</p>
       </footer>
     </div>
