@@ -1,7 +1,21 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 export default function Home() {
+  const { currentUser } = useSelector((state) => state.user); // Get currentUser from Redux store
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    if (currentUser) {
+      // If user is logged in, navigate to the Home page
+      navigate('/');
+    } else {
+      // If no user is logged in, navigate to the Sign Up page
+      navigate('/sign-up');
+    }
+  };
+
   return (
     <div className="bg-gray-100">
       {/* Hero Section */}
@@ -11,12 +25,12 @@ export default function Home() {
           <p className="text-xl mb-8">
             Learn coding with interactive tutorials, quizzes, and real-time code practice.
           </p>
-          <Link
-            to="/sign-up"
+          <button
+            onClick={handleButtonClick} // Conditional navigation
             className="bg-white text-blue-600 px-8 py-4 rounded-full shadow-lg hover:bg-gray-200 transition duration-300"
           >
             Get Started
-          </Link>
+          </button>
         </div>
       </section>
 
@@ -85,7 +99,7 @@ export default function Home() {
                 Learn More
               </Link>
             </div>
-
+            
             <div className="bg-gray-100 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
               <h3 className="text-2xl font-semibold mb-4">C++ Unlocked</h3>
               <p className="text-gray-600 mb-4">
@@ -102,7 +116,8 @@ export default function Home() {
             <div className="bg-gray-100 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
               <h3 className="text-2xl font-semibold mb-4">Develop skills with Java</h3>
               <p className="text-gray-600 mb-4">
-              Learn Java from the ground up, focusing on practical applications and real-world projects.              </p>
+                Learn Java from the ground up, focusing on practical applications and real-world projects.
+              </p>
               <Link
                 to="/courses/java"
                 className="text-blue-600 font-semibold hover:underline"
@@ -151,12 +166,12 @@ export default function Home() {
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold mb-6">Start Your Coding Journey Today!</h2>
           <p className="text-xl mb-8">Join thousands of learners and improve your coding skills with EduCode.</p>
-          <Link
-            to="/sign-up"
+          <button
+            onClick={handleButtonClick} // Conditional navigation
             className="bg-white text-blue-600 px-8 py-4 rounded-full shadow-lg hover:bg-gray-200 transition duration-300"
           >
             Sign Up Now
-          </Link>
+          </button>
         </div>
       </section>
 
