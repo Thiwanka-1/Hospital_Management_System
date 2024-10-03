@@ -65,7 +65,7 @@ export default function Home() {
                 Learn the basics of Python and start building projects in no time.
               </p>
               <Link
-                to="/course/python-basics"
+                to="/courses/python"
                 className="text-blue-600 font-semibold hover:underline"
               >
                 Learn More
@@ -74,12 +74,24 @@ export default function Home() {
 
             {/* Course 2 */}
             <div className="bg-gray-100 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
-              <h3 className="text-2xl font-semibold mb-4">Mastering C/C++</h3>
+              <h3 className="text-2xl font-semibold mb-4">Mastering C</h3>
               <p className="text-gray-600 mb-4">
-                Deep dive into C and C++ with advanced projects and problem-solving challenges.
+                Deep dive into C with advanced projects and problem-solving challenges.
               </p>
               <Link
-                to="/course/cpp-mastering"
+                to="/courses/c"
+                className="text-blue-600 font-semibold hover:underline"
+              >
+                Learn More
+              </Link>
+            </div>
+
+            <div className="bg-gray-100 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+              <h3 className="text-2xl font-semibold mb-4">C++ Unlocked</h3>
+              <p className="text-gray-600 mb-4">
+              Delve into C++ to harness its powerful features for creating fast, efficient software.              </p>
+              <Link
+                to="/courses/cpp"
                 className="text-blue-600 font-semibold hover:underline"
               >
                 Learn More
@@ -88,12 +100,11 @@ export default function Home() {
 
             {/* Course 3 */}
             <div className="bg-gray-100 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
-              <h3 className="text-2xl font-semibold mb-4">Full Stack Development with JavaScript</h3>
+              <h3 className="text-2xl font-semibold mb-4">Develop skills with Java</h3>
               <p className="text-gray-600 mb-4">
-                Become a full-stack developer with in-depth tutorials on JavaScript, Node.js, and more.
-              </p>
+              Learn Java from the ground up, focusing on practical applications and real-world projects.              </p>
               <Link
-                to="/course/fullstack-javascript"
+                to="/courses/java"
                 className="text-blue-600 font-semibold hover:underline"
               >
                 Learn More

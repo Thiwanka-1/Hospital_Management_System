@@ -1,9 +1,30 @@
 import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import logo from "./logo.png";
+import { useState, useEffect, useRef } from 'react'; // Import useEffect and useRef for outside click detection
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user); // Get currentUser from Redux store
+  const [dropdownOpen, setDropdownOpen] = useState(false); // State to manage dropdown visibility
+  const dropdownRef = useRef(null); // Ref for the dropdown
+
+  // Toggle dropdown visibility
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  // Close dropdown when clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className='bg-slate-200'>
@@ -14,7 +35,7 @@ export default function Header() {
             <h1 className='font-bold text-xl'>EduCode</h1>
           </Link>
         </div>
-        <ul className='flex gap-4'>
+        <ul className='flex gap-4 items-center'>
           <li>
             <Link to='/'>Home</Link>
           </li>
@@ -30,6 +51,45 @@ export default function Header() {
           <li>
             <Link to="/questions">Questions</Link>
           </li>
+          <li className="relative">
+            {/* Dropdown for Courses */}
+            <button onClick={toggleDropdown} className="focus:outline-none">
+              Courses
+            </button>
+            {dropdownOpen && (
+              <div ref={dropdownRef} className="absolute right-0 mt-2 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                <Link
+                  to="/courses/c"
+                  className="block px-4 py-2 hover:bg-gray-100"
+                  onClick={() => setDropdownOpen(false)} // Close on click
+                >
+                  C
+                </Link>
+                <Link
+                  to="/courses/cpp"
+                  className="block px-4 py-2 hover:bg-gray-100"
+                  onClick={() => setDropdownOpen(false)} // Close on click
+                >
+                  C++
+                </Link>
+                <Link
+                  to="/courses/java"
+                  className="block px-4 py-2 hover:bg-gray-100"
+                  onClick={() => setDropdownOpen(false)} // Close on click
+                >
+                  Java
+                </Link>
+                <Link
+                  to="/courses/python"
+                  className="block px-4 py-2 hover:bg-gray-100"
+                  onClick={() => setDropdownOpen(false)} // Close on click
+                >
+                  Python
+                </Link>
+              </div>
+            )}
+          </li>
+
           {/* Conditionally render the IDE link based on user authentication */}
           <li>
             <Link to='/ide'>IDE</Link>

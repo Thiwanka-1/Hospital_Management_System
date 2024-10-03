@@ -66,10 +66,11 @@ export default function ManageUsers() {
 
     // Add title and some information
     doc.setFontSize(18);
-    doc.text('Registered Users Report', 50, 20);
+    doc.text('EduCode Registered Users Report', 50, 20);
     doc.setFontSize(12);
     doc.text('Generated on: ' + new Date().toLocaleDateString(), 50, 30);
     doc.text('Total Users: ' + users.length, 50, 35);
+    doc.text('EduCode - Your learning platform for coding', 50, 40);
 
     // Add a table
     const tableColumn = ['Username', 'Email', 'Role'];

@@ -15,6 +15,10 @@ import examsReportRoute from "./routes/examsReportRoute.js";
 import feedbackRoutes from './routes/feedbackroute.js';
 import questionRoutes from './routes/questionRoutes.js';
 
+import courseRoutes from './routes/course.routes.js';
+
+import createRoutes from './routes/create.route.js';
+
 // Load environment variables
 dotenv.config();
 
@@ -59,6 +63,11 @@ app.use("/api/examsReport", examsReportRoute);
 
 app.use('/api/questions', questionRoutes);
 app.use('/api', feedbackRoutes);
+
+app.use('/api/courses', courseRoutes); // Use the course routes
+
+app.use("/api/create", createRoutes);
+
 
 // Global error handling middleware
 app.use((err, req, res, next) => {

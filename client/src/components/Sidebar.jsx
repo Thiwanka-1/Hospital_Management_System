@@ -37,6 +37,16 @@ export default function Sidebar() {
                 User Feedbacks
               </Link>
             </li>
+            <li className="mb-4">
+              <Link to="/add-course" className="hover:text-gray-300">
+                Add Courses
+              </Link>
+            </li>
+            <li className="mb-4">
+              <Link to="/manage-courses" className="hover:text-gray-300">
+                Manage Courses
+              </Link>
+            </li>
           </>
         )}
 
@@ -63,9 +73,20 @@ export default function Sidebar() {
                 Add Questions
               </Link>
             </li>
+            <li className="mb-4">
+              <Link to="/quicknote" className="hover:text-gray-300">
+                Add Notes
+              </Link>
+            </li>
+            <li className="mb-4">
+              <Link to="/mynotes" className="hover:text-gray-300">
+                Manage Notes
+              </Link>
+            </li>
+            
           </>
         )}
       </ul>
     </div>
   );
-}
+};
