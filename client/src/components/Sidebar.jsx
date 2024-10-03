@@ -32,6 +32,11 @@ export default function Sidebar() {
                 Exam Management
               </Link>
             </li>
+            <li className="mb-4">
+              <Link to="/vfeed" className="hover:text-gray-300">
+                User Feedbacks
+              </Link>
+            </li>
           </>
         )}
 
@@ -44,8 +49,18 @@ export default function Sidebar() {
               </Link>
             </li>
             <li className="mb-4">
-              <Link to="/user-settings" className="hover:text-gray-300">
-                User Settings
+              <Link to="/feed" className="hover:text-gray-300">
+                Feedback
+              </Link>
+            </li>
+            <li className="mb-4">
+              <Link to="/user/questions" className="hover:text-gray-300">
+                My Questions
+              </Link>
+            </li>
+            <li className="mb-4">
+              <Link to="/questions/new" className="hover:text-gray-300">
+                Add Questions
               </Link>
             </li>
           </>

@@ -12,6 +12,8 @@ import contactRoutes from './routes/contactRoutes.js';
 import examsRoute from "./routes/examRoutes.js";
 import examsReportRoute from "./routes/examsReportRoute.js";
 
+import feedbackRoutes from './routes/feedbackroute.js';
+import questionRoutes from './routes/questionRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -51,8 +53,12 @@ app.use("/api/auth", authRoutes);  // Authentication routes
 app.use('/project', projectRoutes);  // Project CRUD routes
 app.use('/ide', routes);            // IDE code execution routes
 app.use('/api', contactRoutes);
+
 app.use("/api/exams", examsRoute);
 app.use("/api/examsReport", examsReportRoute);
+
+app.use('/api/questions', questionRoutes);
+app.use('/api', feedbackRoutes);
 
 // Global error handling middleware
 app.use((err, req, res, next) => {

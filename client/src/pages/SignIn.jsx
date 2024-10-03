@@ -5,10 +5,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import OAuth from '../components/OAuth';
 
 export default function SignIn() {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const validate = () => {
+    const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email';
+    }
+    if (formData.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters long';
+    }
+
+    return newErrors;
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -16,6 +32,12 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
     try {
       dispatch(signInStart());
       const res = await fetch('/api/auth/signin', {
@@ -26,15 +48,14 @@ export default function SignIn() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      
+
       if (data.success === false) {
         dispatch(signInFailure(data));
         return;
       }
-      
+
       dispatch(signInSuccess(data));
 
-      // Redirect based on user role
       if (data.role === 'admin') {
         navigate('/admin-profile');
       } else {
@@ -56,13 +77,24 @@ export default function SignIn() {
           className='bg-slate-100 p-3 rounded-lg'
           onChange={handleChange}
         />
-        <input
-          type='password'
-          placeholder='Password'
-          id='password'
-          className='bg-slate-100 p-3 rounded-lg'
-          onChange={handleChange}
-        />
+        {errors.email && <p className="text-red-500">{errors.email}</p>}
+        <div className='relative'>
+          <input
+            type={showPassword ? 'text' : 'password'}
+            placeholder='Password'
+            id='password'
+            className='bg-slate-100 p-3 rounded-lg w-full'
+            onChange={handleChange}
+          />
+          {errors.password && <p className="text-red-500">{errors.password}</p>}
+          <button
+            type='button'
+            onClick={() => setShowPassword(!showPassword)}
+            className='absolute inset-y-0 right-3 flex items-center'
+          >
+            {showPassword ? 'Hide' : 'Show'}
+          </button>
+        </div>
         <button
           disabled={loading}
           className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'

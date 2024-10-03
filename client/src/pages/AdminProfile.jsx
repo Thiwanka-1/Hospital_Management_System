@@ -14,6 +14,8 @@ export default function AdminProfile() {
   const [imageError, setImageError] = useState(false);
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -48,12 +50,35 @@ export default function AdminProfile() {
     );
   };
 
+  const validate = () => {
+    const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (formData.username && formData.username.length < 8) {
+      newErrors.username = 'Username must be at least 8 characters long';
+    }
+    if (formData.email && !emailRegex.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email';
+    }
+    if (formData.password && formData.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters long';
+    }
+
+    return newErrors;
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
     try {
       dispatch(updateUserStart());
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
@@ -69,11 +94,10 @@ export default function AdminProfile() {
         return;
       }
 
-      // Ensure isAdmin is preserved and update Redux store
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
 
-      // Redirect to admin profile after successful update
+      // Redirect based on user role
       if (data.isAdmin) {
         navigate('/admin-profile');
       } else {
@@ -112,10 +136,8 @@ export default function AdminProfile() {
 
   return (
     <div className="flex h-full">
-      {/* Sidebar */}
       <Sidebar />
 
-      {/* Main content */}
       <div className="flex-1 p-8 ml-64">
         <h1 className='text-3xl font-semibold text-center mb-7'>Admin Profile</h1>
         <form onSubmit={handleSubmit} className='flex flex-col gap-4 max-w-lg mx-auto'>
@@ -155,7 +177,8 @@ export default function AdminProfile() {
             className='bg-slate-100 rounded-lg p-3'
             onChange={handleChange}
           />
-          
+          {errors.username && <p className="text-red-500">{errors.username}</p>}
+
           <input
             defaultValue={currentUser.email}
             type='email'
@@ -164,21 +187,31 @@ export default function AdminProfile() {
             className='bg-slate-100 rounded-lg p-3'
             onChange={handleChange}
           />
-          
-          <input
-            type='password'
-            id='password'
-            placeholder='Password'
-            className='bg-slate-100 rounded-lg p-3'
-            onChange={handleChange}
-          />
-          
+          {errors.email && <p className="text-red-500">{errors.email}</p>}
+
+          <div className='relative'>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id='password'
+              placeholder='Password'
+              className='bg-slate-100 rounded-lg p-3 w-full'
+              onChange={handleChange}
+            />
+            <button
+              type='button'
+              onClick={() => setShowPassword(!showPassword)}
+              className='absolute inset-y-0 right-3 flex items-center'
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          </div>
+          {errors.password && <p className="text-red-500">{errors.password}</p>}
+
           <button className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>
             {loading ? 'Loading...' : 'Update'}
           </button>
         </form>
         
-        {/* Flexbox layout to ensure buttons stay centered */}
         <div className='flex justify-between max-w-lg mx-auto mt-5'>
           <span
             onClick={handleDeleteAccount}

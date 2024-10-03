@@ -22,6 +22,15 @@ import AddEditExam from "./pages/quiz/AddEditExam";
 import UserExamReport from "./pages/quiz/UserExamReport";
 import AdminExamReports from "./pages/quiz/AdminExamReports";
 
+import Feed from "./pages/feed/feedback";
+import AdminFeedback from "./pages/feed/AdminFeedback";
+import QuestionList from './pages/feed/QuestionList';
+import QuestionDetail from './pages/feed/QuestionDetail';
+import AddQuestion from './pages/feed/AddQuestion';
+import AddComment from './pages/feed/AddComment';
+import UserQuestions from './pages/feed/UserQuestions';
+import UpdateQuestion from './pages/feed/UpdateQuestion';
+
 
 export default function App() {
   return <BrowserRouter>
@@ -41,7 +50,15 @@ export default function App() {
 
         <Route path="/play-quiz" element={<PlayQuiz />} />
         <Route path="/exam-write/:id" element={<ExamWrite />} />
-        <Route path="/user-exam-report" element={<UserExamReport />} /> 
+        <Route path="/user-exam-report" element={<UserExamReport />} />
+
+        <Route path = "/feed" element = {<Feed />} />
+        <Route path="/questions" element={<QuestionList />} />
+        <Route path="/questions/new" element={<AddQuestion />} />
+        <Route path="/questions/:id" element={<QuestionDetail />} />
+        <Route path="/questions/:id/comments/new" element={<AddComment />} />
+        <Route path="/user/questions" element={<UserQuestions />} />
+        <Route path="/questions/:id/edit" element={<UpdateQuestion />} />
         
       </Route>
 
@@ -54,6 +71,9 @@ export default function App() {
         <Route path="/exam-add" element={<AddEditExam />} />
         <Route path="/exam-add/:id" element={<AddEditExam />} />
         <Route path="/admin-exam-report" element={<AdminExamReports />} />
+
+        <Route path="/vfeed" element={<AdminFeedback />} />
+
       </Route>
     </Routes>
   

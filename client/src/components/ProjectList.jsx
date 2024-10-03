@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 const ProjectList = () => {
   const [projects, setProjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); // State to store the search input
+  const [selectedLanguage, setSelectedLanguage] = useState(""); // State for the selected language filter
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,25 +39,48 @@ const ProjectList = () => {
     navigate(`/editor/${id}`);
   };
 
-  // Filter projects based on search term (matches both name and language)
+  // Filter projects based on search term (matches both name and language) and selected language
   const filteredProjects = projects.filter((project) =>
-    project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    project.language.toLowerCase().includes(searchTerm.toLowerCase())
+    (project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      project.language.toLowerCase().includes(searchTerm.toLowerCase())) &&
+    (selectedLanguage === "" || project.language === selectedLanguage)
   );
+
+  // Get unique languages for the filter dropdown
+  const uniqueLanguages = [...new Set(projects.map((project) => project.language))];
 
   return (
     <div className="container mx-auto mt-8">
       <h1 className="text-3xl font-bold text-black text-center mb-6">Project List</h1>
 
-      {/* Search Bar */}
-      <div className="mb-6">
-        <input
-          type="text"
-          placeholder="Search projects by name or language..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500"
-        />
+      {/* Filter and Search Bar Container */}
+      <div className="flex justify-between items-center mb-6">
+        {/* Filter Dropdown (Left) */}
+        <div className="w-full md:w-1/4">
+          <select
+            value={selectedLanguage}
+            onChange={(e) => setSelectedLanguage(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500"
+          >
+            <option value="">All Languages</option>
+            {uniqueLanguages.map((language) => (
+              <option key={language} value={language}>
+                {language}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Search Bar (Right) */}
+        <div className="w-full md:w-1/2">
+          <input
+            type="text"
+            placeholder="Search projects by name or language..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500"
+          />
+        </div>
       </div>
 
       {filteredProjects.length > 0 ? (
