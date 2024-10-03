@@ -11,7 +11,7 @@ export default function About() {
           <p className="text-xl mb-8">
             Empowering beginners to master coding with interactive courses, built-in IDE, and hands-on practice.
           </p>
-          <Link to="/courses" className="bg-white text-blue-600 px-6 py-3 rounded-full shadow-lg hover:bg-gray-200">
+          <Link to="/courses/java" className="bg-white text-blue-600 px-6 py-3 rounded-full shadow-lg hover:bg-gray-200">
             Explore Our Courses
           </Link>
         </div>

@@ -25,6 +25,7 @@ const CourseDetail = () => {
   }
 
   return (
+    <div>
     <div className="container mx-auto p-8 min-h-screen bg-gray-50">
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="p-6">
@@ -56,6 +57,10 @@ const CourseDetail = () => {
         </div>
       </div>
     </div>
+    <footer className="bg-blue-600 text-white py-6 text-center">
+    <p>&copy; 2024 EduCode. Empowering the next generation of coders.</p>
+  </footer>
+</div>
   );
 };
 
