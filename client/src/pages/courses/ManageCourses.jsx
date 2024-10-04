@@ -1,11 +1,9 @@
-// client/src/pages/ManageCourses.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import logo from '../../components/logo.png'; // Import your logo
-
 
 const ManageCourses = () => {
   const [courses, setCourses] = useState([]);
@@ -26,8 +24,11 @@ const ManageCourses = () => {
     fetchCourses();
   }, []);
 
-  // Handle deletion of a course
+  // Handle deletion of a course with confirmation
   const handleDelete = async (id) => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this course?");
+    if (!isConfirmed) return;
+
     try {
       await axios.delete(`/api/courses/${id}`);
       setCourses(courses.filter(course => course._id !== id)); // Remove deleted course from list
@@ -87,9 +88,6 @@ const ManageCourses = () => {
     // Save the generated PDF
     doc.save('courses_report.pdf');
   };
-  
-  
-  
 
   return (
     <div className="container mx-auto p-4">

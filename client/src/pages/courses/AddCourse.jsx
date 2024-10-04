@@ -1,4 +1,3 @@
-// client/src/pages/AddCourse.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -44,6 +43,13 @@ const AddCourse = () => {
 
   const handleAddSection = () => {
     setContent([...content, { sectionTitle: '', sectionContent: '' }]);
+  };
+
+  // Remove section handler
+  const handleRemoveSection = (index) => {
+    const newContent = [...content];
+    newContent.splice(index, 1); // Remove the section at the specified index
+    setContent(newContent);
   };
 
   const handleSubmit = async (event) => {
@@ -143,6 +149,15 @@ const AddCourse = () => {
               className="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:border-blue-500"
               placeholder="Enter section content"
             />
+
+            {/* Remove Section Button */}
+            <button
+              type="button"
+              onClick={() => handleRemoveSection(index)}
+              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mt-2 focus:outline-none"
+            >
+              Remove Section
+            </button>
           </div>
         ))}
 

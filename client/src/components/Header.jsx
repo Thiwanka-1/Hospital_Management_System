@@ -27,15 +27,18 @@ export default function Header() {
   }, []);
 
   return (
-    <div className='bg-slate-200'>
-      <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
-        <div className="flex items-center">
-          <img src={logo} alt="EduCode Logo" className="h-10 mr-2" />
+    <div className="bg-slate-200">
+      <div className="flex justify-between items-center max-w-full mx-auto py-2 px-9">
+        {/* Left Section: Logo and Name */}
+        <div className="flex items-center space-x-1">
+          <img src={logo} alt="EduCode Logo" className="h-16" /> {/* Increased size */}
           <Link to='/'>
-            <h1 className='font-bold text-xl'>EduCode</h1>
+            <h1 className='font-bold text-2xl'>EduCode</h1> {/* Increased size */}
           </Link>
         </div>
-        <ul className='flex gap-4 items-center'>
+
+        {/* Right Section: Navigation Links */}
+        <ul className='flex gap-3 items-center'>
           <li>
             <Link to='/'>Home</Link>
           </li>
@@ -102,7 +105,7 @@ export default function Header() {
                 <img
                   src={currentUser.profilePicture}
                   alt='profile'
-                  className='h-7 w-7 rounded-full object-cover'
+                  className='h-8 w-8 rounded-full object-cover'
                 />
               </Link>
             </li>
