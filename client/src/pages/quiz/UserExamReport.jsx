@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 const UserExamReport = () => {
   const [reportsData, setReportData] = useState([]);
   const { currentUser } = useSelector((state) => state.user);
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
     const dd = String(date.getDate()).padStart(2, "0");
     const hh = String(date.getHours()).padStart(2, "0");
     const min = String(date.getMinutes()).padStart(2, "0");
@@ -50,46 +50,56 @@ const UserExamReport = () => {
   }, []);
 
   return (
-    <div className="p-6">
-      {/* Back Button */}
-      <button
-        className="mb-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-        onClick={() => navigate("/play-quiz")}
-      >
-        Back
-      </button>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <div className="flex justify-between items-center mb-6">
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+          onClick={() => navigate("/play-quiz")}
+        >
+          Back
+        </button>
+        <h1 className="text-3xl font-bold text-gray-700 text-center w-full">
+          My Results
+        </h1>
+      </div>
 
-      <div className="overflow-x-auto mt-4">
+      <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <table className="min-w-full bg-white border border-gray-300">
           <thead>
-            <tr className="bg-gray-100">
-              <th className="py-2 px-4 border-b">Exam Name</th>
-              <th className="py-2 px-4 border-b">Date</th>
-              <th className="py-2 px-4 border-b">Total Marks</th>
-              <th className="py-2 px-4 border-b">Passing Marks</th>
-              <th className="py-2 px-4 border-b">Obtained Marks</th>
-              <th className="py-2 px-4 border-b">Verdict</th>
+            <tr className="bg-blue-100">
+              <th className="py-3 px-6 border-b text-center">Exam Name</th>
+              <th className="py-3 px-6 border-b text-center">Date</th>
+              <th className="py-3 px-6 border-b text-center">Total Marks</th>
+              <th className="py-3 px-6 border-b text-center">Passing Marks</th>
+              <th className="py-3 px-6 border-b text-center">Obtained Marks</th>
+              <th className="py-3 px-6 border-b text-center">Verdict</th>
             </tr>
           </thead>
           <tbody>
             {reportsData.map((record) => (
               <tr key={record.id} className="hover:bg-gray-50">
-                <td className="py-2 px-4 border-b text-center">
-                  {record.exam.name}
+                <td className="py-3 px-6 border-b text-center ">
+                  {record.exam ? record.exam.name : "Exam Not Available"}
                 </td>
-                <td className="py-2 px-4 border-b text-center">
+                <td className="py-3 px-6 border-b text-center">
                   {formatDate(record.createdAt)}
                 </td>
-                <td className="py-2 px-4 border-b text-center">
-                  {record.exam.totalMarks}
+                <td className="py-3 px-6 border-b text-center">
+                  {record.exam ? record.exam.totalMarks : "N/A"}
                 </td>
-                <td className="py-2 px-4 border-b text-center">
-                  {record.exam.passingMarks}
+                <td className="py-3 px-6 border-b text-center">
+                  {record.exam ? record.exam.passingMarks : "N/A"}
                 </td>
-                <td className="py-2 px-4 border-b text-center">
+                <td className="py-3 px-6 border-b text-center">
                   {record.result.correctAnswers.length}
                 </td>
-                <td className="py-2 px-4 border-b text-center">
+                <td
+                  className={`py-3 px-6 border-b text-center font-semibold ${
+                    record.result.verdict === "Pass"
+                      ? "text-green-500"
+                      : "text-red-500"
+                  }`}
+                >
                   {record.result.verdict}
                 </td>
               </tr>

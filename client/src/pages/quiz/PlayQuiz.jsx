@@ -29,6 +29,7 @@ const PlayQuiz = () => {
   }, []);
 
   return (
+    <div>
     <div className="p-6 bg-gray-100 min-h-screen relative">
       {/* My Results Button at Top Right */}
       <div className="absolute top-4 right-4">
@@ -79,7 +80,7 @@ const PlayQuiz = () => {
               </p>
               <p className="text-md text-gray-700">
                 Duration:{" "}
-                <span className="font-medium">{exam.duration} mins</span>
+                <span className="font-medium">{exam.duration} seconds</span>
               </p>
             </div>
             <button
@@ -93,8 +94,15 @@ const PlayQuiz = () => {
       </div>
 
       {/* Footer Section */}
-      <footer className="mt-8 text-center text-blue-800">
-        <p>🌟 Keep learning and improving your skills! 🌟</p>
+
+      
+    </div>
+    <footer className="mt-8 text-center text-blue-800">
+        <p className="mb-4">🌟 Keep learning and improving your skills! 🌟</p>{" "}
+        {/* Added mb-4 for margin-bottom */}
+        <div className="bg-blue-700 text-white py-6 text-center">
+          <p>&copy; 2024 EduCode. Empowering the next generation of coders.</p>
+        </div>
       </footer>
     </div>
   );

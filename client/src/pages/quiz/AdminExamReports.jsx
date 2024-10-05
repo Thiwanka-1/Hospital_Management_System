@@ -55,6 +55,33 @@ function AdminExamReports() {
     getData();
   }, []);
 
+  // Function to delete report by ID
+  const deleteReportById = async (reportId) => {
+    try {
+      const res = await fetch("/api/examsReport/delete-exam-report", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ reportId }),
+      });
+
+      const responseData = await res.json();
+      if (!responseData.success) {
+        throw new Error(responseData.message);
+      }
+
+      // Remove deleted report from the UI
+      setReportData((prevReports) =>
+        prevReports.filter((report) => report._id !== reportId)
+      );
+      alert("Report deleted successfully!");
+    } catch (error) {
+      console.error(error.message);
+      alert("Error deleting the report!");
+    }
+  };
+
   // Filter reports based on search term, selected date, and selected category
   const filteredReports = reportsData.filter((record) => {
     const recordDate = new Date(record.createdAt);
@@ -64,10 +91,16 @@ function AdminExamReports() {
         recordDate.getMonth() === new Date(selectedDate).getMonth() &&
         recordDate.getDate() === new Date(selectedDate).getDate());
     const matchesSearch =
-      record.user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      record.exam.name.toLowerCase().includes(searchTerm.toLowerCase());
+      (record.user &&
+        record.user.username
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())) ||
+      (record.exam &&
+        record.exam.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
     const matchesCategory =
-      !selectedCategory || record.exam.category === selectedCategory;
+      !selectedCategory ||
+      (record.exam && record.exam.category === selectedCategory);
 
     return isSameDate && matchesSearch && matchesCategory;
   });
@@ -103,11 +136,11 @@ function AdminExamReports() {
 
     filteredReports.forEach((record) => {
       const rowData = [
-        record.exam.name,
+        record.exam ? record.exam.name : "Exam Not Available",
         formatDate(record.createdAt),
-        record.user.username,
-        record.exam.totalMarks,
-        record.exam.passingMarks,
+        record.user ? record.user.username : "Unknown User",
+        record.exam ? record.exam.totalMarks : "null",
+        record.exam ? record.exam.passingMarks : "null",
         record.result.correctAnswers.length,
         record.result.verdict,
       ];
@@ -230,31 +263,44 @@ function AdminExamReports() {
               <th className="py-2 px-4 border-b text-center">Passing Marks</th>
               <th className="py-2 px-4 border-b text-center">Obtained Marks</th>
               <th className="py-2 px-4 border-b text-center">Verdict</th>
+              <th className="py-2 px-4 border-b text-center">Action</th>
             </tr>
           </thead>
           <tbody>
             {filteredReports.map((record) => (
               <tr key={record.id} className="hover:bg-gray-50">
                 <td className="py-2 px-4 border-b text-center">
-                  {record.exam.name}
+                  {record.exam ? record.exam.name : "Exam Not Available"}
                 </td>
                 <td className="py-2 px-4 border-b text-center">
                   {formatDate(record.createdAt)}
                 </td>
                 <td className="py-2 px-4 border-b text-center">
-                  {record.user.username}
+                  {record.user ? record.user.username : "Unknown User"}
                 </td>
                 <td className="py-2 px-4 border-b text-center">
-                  {record.exam.totalMarks}
+                  {record.exam ? record.exam.totalMarks : "null"}
                 </td>
                 <td className="py-2 px-4 border-b text-center">
-                  {record.exam.passingMarks}
+                  {record.exam ? record.exam.passingMarks : "null"}
                 </td>
                 <td className="py-2 px-4 border-b text-center">
                   {record.result.correctAnswers.length}
                 </td>
-                <td className="py-2 px-4 border-b text-center">
+                <td
+                  className={`py-3 px-6 border-b text-center font-semibold ${
+                    record.result.verdict === "Pass"
+                      ? "text-green-500"
+                      : "text-red-500"
+                  }`}
+                >
                   {record.result.verdict}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  <i
+                    className="ri-delete-bin-line cursor-pointer"
+                    onClick={() => deleteReportById(record._id)}
+                  ></i>
                 </td>
               </tr>
             ))}

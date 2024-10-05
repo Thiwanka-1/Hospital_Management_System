@@ -1,5 +1,4 @@
 import { Router } from "express";
-import Exam from "../models/quiz/examModel.js";
 import Report from "../models/quiz/examReportModel.js";
 import { verifyToken } from "../utils/verifyUser.js";
 
@@ -56,6 +55,35 @@ router.post("/get-attempts-by-user", verifyToken, async (req, res) => {
       data: reports,
     });
   } catch (error) {
+    res.status(500).send({
+      message: error.message,
+      data: error,
+      success: false,
+    });
+  }
+});
+// delete report
+router.post("/delete-exam-report", verifyToken, async (req, res) => {
+  try {
+    // Find the report by ID and delete it
+    const report = await Report.findByIdAndDelete(req.body.reportId);
+
+    // Check if the report was found and deleted
+    if (!report) {
+      return res.status(404).send({
+        message: "Report not found",
+        success: false,
+      });
+    }
+
+    // Send success response
+    res.send({
+      message: "Report deleted successfully",
+      success: true,
+      data: report,
+    });
+  } catch (error) {
+    // Handle server errors
     res.status(500).send({
       message: error.message,
       data: error,

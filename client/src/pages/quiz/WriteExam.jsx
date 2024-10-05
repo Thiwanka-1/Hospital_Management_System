@@ -36,6 +36,14 @@ function WriteExam() {
     }
   }, [params.id]);
 
+  useEffect(() => {
+    // This useEffect will trigger when secondsLeft reaches 0 to ensure the latest selectedOptions are used
+    if (secondsLeft === 0) {
+      clearInterval(intervalId);
+      calculateResults();
+    }
+  }, [secondsLeft, selectedOptions]);
+
   const getExamById = async (payload) => {
     try {
       const res = await fetch("/api/exams/get-exam-by-id", {
