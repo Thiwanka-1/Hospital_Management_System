@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 const ProjectList = () => {
   const [projects, setProjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); // State to store the search input
@@ -50,7 +51,10 @@ const ProjectList = () => {
   const uniqueLanguages = [...new Set(projects.map((project) => project.language))];
 
   return (
+    <div>
+      
     <div className="container mx-auto mt-8">
+      
       <h1 className="text-3xl font-bold text-black text-center mb-6">Project List</h1>
 
       {/* Filter and Search Bar Container */}
@@ -114,6 +118,10 @@ const ProjectList = () => {
       ) : (
         <p className="text-white text-center">No projects found. Save your first project!</p>
       )}
+    </div>
+    <footer className="bg-blue-600 text-white py-7 mt-72 text-center">
+        <p>&copy; 2024 EduCode. Empowering the next generation of coders.</p>
+      </footer>
     </div>
   );
 };

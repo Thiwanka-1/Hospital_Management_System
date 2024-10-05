@@ -4,12 +4,21 @@ import { Link } from 'react-router-dom';
 export default function About() {
   return (
     <div className="bg-gray-100">
-      {/* Hero Section */}
-      <section className="bg-blue-600 text-white py-20">
-        <div className="container mx-auto px-5 text-center">
-          <h1 className="text-4xl font-bold mb-4">About EduCode</h1>
-          <p className="text-xl mb-8">
-            Empowering beginners to master coding with interactive courses, built-in IDE, and hands-on practice.
+      <section
+        className=" text-white py-20 relative"
+        style={{
+          backgroundImage: `url('https://img.freepik.com/free-photo/diverse-businesspeople-having-meeting_53876-103954.jpg?t=st=1728115006~exp=1728118606~hmac=6fda9cdf274169200534d801b0696485b0a299ab7eb51ae7a993473ba21f28dc&w=996')`, // Add your background image URL
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          width: '100%',
+          height: '700px',
+        }}
+      >
+        <div className="absolute inset-0 bg-opacity-70"></div> {/* Blue overlay for better readability */}
+        <div className="container mx-auto px-5 text-center relative z-10"> {/* Text should be in front of the image */}
+          <h1 className="text-6xl font-bold mb-4 mt-44">About EduCode</h1>
+          <p className="text-2xl mb-8">
+          Empowering beginners to master coding with interactive courses, built-in IDE, and hands-on practice.
           </p>
           <Link to="/courses/java" className="bg-white text-blue-600 px-6 py-3 rounded-full shadow-lg hover:bg-gray-200">
             Explore Our Courses
