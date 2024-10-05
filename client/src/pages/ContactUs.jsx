@@ -112,11 +112,21 @@ export default function ContactUs() {
 
   return (
     <div className="bg-gray-100">
-      {/* Hero Section */}
-      <section className="bg-blue-600 text-white py-20">
-        <div className="container mx-auto px-5 text-center">
-          <h1 className="text-4xl font-bold mb-4">Contact EduCode</h1>
-          <p className="text-xl mb-8">
+      {/* Hero Section with Background Image */}
+      <section
+        className=" text-white py-20 relative"
+        style={{
+          backgroundImage: `url('https://img.freepik.com/free-photo/portrait-asian-girl-works-cafe-uses-laptop-sits-outdoors-street-digital-nomad_1258-189137.jpg?t=st=1728108437~exp=1728112037~hmac=fd9bbfd89fa7808af77e99050830efecb773aa94fd797bbe673822f1ee58f7d7&w=996')`, // Add your background image URL
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          width: '100%',
+          height: '700px',
+        }}
+      >
+        <div className="absolute inset-0 bg-opacity-70"></div> {/* Blue overlay for better readability */}
+        <div className="container mx-auto px-5 text-center relative z-10"> {/* Text should be in front of the image */}
+          <h1 className="text-6xl font-bold mb-4 mt-44">Contact EduCode</h1>
+          <p className="text-2xl mb-8">
             Have any questions? We're here to help you on your coding journey!
           </p>
         </div>
