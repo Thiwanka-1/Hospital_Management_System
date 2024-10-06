@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import logo from "./logo.png";
-import { useState, useEffect, useRef } from 'react'; // Import useEffect and useRef for outside click detection
+import { useState, useEffect, useRef } from 'react';
 
 export default function Header() {
-  const { currentUser } = useSelector((state) => state.user); // Get currentUser from Redux store
-  const [dropdownOpen, setDropdownOpen] = useState(false); // State to manage dropdown visibility
-  const dropdownRef = useRef(null); // Ref for the dropdown
+  const { currentUser } = useSelector((state) => state.user);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   // Toggle dropdown visibility
   const toggleDropdown = () => {
@@ -29,11 +29,11 @@ export default function Header() {
   return (
     <div className="bg-slate-200">
       <div className="flex justify-between items-center max-w-full mx-auto py-2 px-9">
-        {/* Left Section: Logo and Name */}
+        {/* Left Section: Logo */}
         <div className="flex items-center space-x-1">
-          <img src={logo} alt="EduCode Logo" className="h-16" /> {/* Increased size */}
+          <img src={logo} alt="EduCode Logo" className="h-16" />
           <Link to='/'>
-            <h1 className='font-bold text-2xl'>EduCode</h1> {/* Increased size */}
+            <h1 className='font-bold text-2xl'>EduCode</h1>
           </Link>
         </div>
 
@@ -60,32 +60,35 @@ export default function Header() {
               Courses
             </button>
             {dropdownOpen && (
-              <div ref={dropdownRef} className="absolute right-0 mt-2 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+              <div
+                ref={dropdownRef}
+                className="absolute right-0 mt-2 bg-white border border-gray-300 rounded-md shadow-lg z-50"
+              >
                 <Link
                   to="/courses/c"
                   className="block px-4 py-2 hover:bg-gray-100"
-                  onClick={() => setDropdownOpen(false)} // Close on click
+                  onClick={() => setDropdownOpen(false)}
                 >
                   C
                 </Link>
                 <Link
                   to="/courses/cpp"
                   className="block px-4 py-2 hover:bg-gray-100"
-                  onClick={() => setDropdownOpen(false)} // Close on click
+                  onClick={() => setDropdownOpen(false)}
                 >
                   C++
                 </Link>
                 <Link
                   to="/courses/java"
                   className="block px-4 py-2 hover:bg-gray-100"
-                  onClick={() => setDropdownOpen(false)} // Close on click
+                  onClick={() => setDropdownOpen(false)}
                 >
                   Java
                 </Link>
                 <Link
                   to="/courses/python"
                   className="block px-4 py-2 hover:bg-gray-100"
-                  onClick={() => setDropdownOpen(false)} // Close on click
+                  onClick={() => setDropdownOpen(false)}
                 >
                   Python
                 </Link>
@@ -93,12 +96,12 @@ export default function Header() {
             )}
           </li>
 
-          {/* Conditionally render the IDE link based on user authentication */}
+          {/* Conditionally render IDE link based on authentication */}
           <li>
             <Link to='/ide'>IDE</Link>
           </li>
 
-          {/* Conditional rendering for the profile picture */}
+          {/* Conditional rendering for profile picture */}
           {currentUser ? (
             <li>
               <Link to={currentUser.isAdmin ? '/admin-profile' : '/profile'}>

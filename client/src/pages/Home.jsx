@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay } from 'swiper/modules'; // Include Autoplay
+import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
 export default function Home() {
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleButtonClick = () => {
     if (currentUser) {
@@ -18,6 +19,14 @@ export default function Home() {
     }
   };
 
+  // Disable pointer events on Swiper when dropdown is open
+  useEffect(() => {
+    const swiperContainer = document.querySelector('.swiper-container');
+    if (swiperContainer) {
+      swiperContainer.style.pointerEvents = isDropdownOpen ? 'none' : 'auto';
+    }
+  }, [isDropdownOpen]);
+
   return (
     <div className="bg-gray-100">
       {/* Hero Section */}
@@ -26,10 +35,10 @@ export default function Home() {
         <Swiper
           spaceBetween={30}
           centeredSlides={true}
-          autoplay={{ delay: 5000, disableOnInteraction: false }} // Slides auto-run every second
+          autoplay={{ delay: 5000, disableOnInteraction: false }}
           pagination={{ clickable: true }}
-          modules={[Pagination, Autoplay]} // Added Autoplay module
-          className="absolute inset-0 w-full h-full z-0"
+          modules={[Pagination, Autoplay]}
+          className="absolute inset-0 w-full h-full z-0 swiper-container"
         >
           <SwiperSlide>
             <img
@@ -51,16 +60,17 @@ export default function Home() {
               alt="Interactive Coding"
               className="object-cover w-full h-full"
             />
-          </SwiperSlide><SwiperSlide>
+          </SwiperSlide>
+          <SwiperSlide>
             <img
               src="https://img.freepik.com/premium-photo/purple-digital-binary-data-computer-screen-background-ar-21-job-id-99bcabe6d21049a3b3759e658b7ffc43_941600-133420.jpg?w=996"
-              alt="Interactive Coding"
+              alt="Coding Data"
               className="object-cover w-full h-full"
             />
           </SwiperSlide>
         </Swiper>
 
-        {/* Text overlay (fixed and stable) */}
+        {/* Text overlay */}
         <div className="relative z-10 flex flex-col justify-center items-center h-full text-white">
           <h1 className="text-6xl font-bold mb-4">Welcome to EduCode</h1>
           <p className="text-2xl mb-8 text-center px-4">
@@ -74,9 +84,9 @@ export default function Home() {
           </button>
         </div>
 
-        {/* Dark overlay to improve text readability */}
+        {/* Dark overlay */}
         <div className="absolute inset-0 bg-black bg-opacity-40 z-5"></div>
-      </section>      
+      </section>
 
       {/* Stats Section */}
       <section className="container mx-auto py-20 px-5 text-center bg-blue-50">
@@ -101,13 +111,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why EduCode Section with Improved Images */}
+      {/* Why EduCode Section */}
       <section className="container mx-auto py-20 px-5">
         <h2 className="text-4xl font-bold text-center mb-10">Why EduCode?</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
           <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
             <img
-              src="https://img.freepik.com/free-photo/programming-background-collage_23-2149901779.jpg?t=st=1728104332~exp=1728107932~hmac=ea33d8e612d2b194bd5d4b1ddca8158158fa256a1d181a5920e1157f08696fa7&w=996"
+              src="https://img.freepik.com/free-photo/programming-background-collage_23-2149901779.jpg?t=st=1728188215~exp=1728191815~hmac=707d5dfff497af424d90bc15c1f40efcbd3d2ad3da22edc439d83fa464546d50&w=1380"
               alt="Interactive IDE"
               className="w-full h-44 mx-auto mb-4 rounded-lg"
             />
@@ -118,7 +128,7 @@ export default function Home() {
           </div>
           <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
             <img
-              src="https://img.freepik.com/free-photo/programming-background-collage_23-2149901771.jpg?t=st=1728104382~exp=1728107982~hmac=2d74e9bc834c69c80b15cc4cbe21a4db8870b27ec529fd146450cb3ebd912618&w=996"
+              src="https://img.freepik.com/free-photo/programming-background-collage_23-2149901771.jpg?t=st=1728188253~exp=1728191853~hmac=598464c29aa737d0363dff1ed9902f45a36d0f2fcbb563adced86ce36645c4ce&w=1060"
               alt="Courses & Tutorials"
               className="w-full h-44 mx-auto mb-4 rounded-lg"
             />
@@ -129,7 +139,7 @@ export default function Home() {
           </div>
           <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
             <img
-              src="https://img.freepik.com/free-photo/programming-background-collage_23-2149901774.jpg?t=st=1728107251~exp=1728110851~hmac=4733ddb48e434878020426403ebd76f70fe3ac69b0940014477b1c28c20928dc&w=996"
+              src="https://img.freepik.com/free-photo/programming-background-collage_23-2149901774.jpg?t=st=1728188292~exp=1728191892~hmac=f7773d1c78fcb4507ad8ef42543ad782ebd1b8c461f448cefa6c69fe40fc9316&w=1380"
               alt="Quizzes & Games"
               className="w-full h-44 mx-auto mb-4 rounded-lg"
             />
@@ -141,10 +151,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Add another image between sections */}
+      {/* Image Section */}
       <section className="container mx-auto py-10">
         <img
-          src="https://img.freepik.com/free-photo/programming-background-collage_23-2149901789.jpg?t=st=1728105153~exp=1728108753~hmac=2af7e15f5a58d5a569d2cc862c472b23a4a4338f3bfd0eef52c78ba4fdea9978&w=996"
+          src="https://img.freepik.com/free-photo/programming-background-collage_23-2149901789.jpg?t=st=1728188166~exp=1728191766~hmac=ccb25af438f8720be9a249310bc3c46301d7f0286e32893ae9c97953bf342dc3&w=1380"
           alt="Coding Lifestyle"
           className="object-cover w-full h-96 rounded-lg shadow-md"
         />
@@ -177,8 +187,8 @@ export default function Home() {
               </Link>
             </div>
             <div className="bg-gray-100 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
-              <h3 className="text-2xl font-semibold mb-4">Build your caree with Java</h3>
-              <p className="text-gray-600 mb-4">Build fast, efficient software to improve your skill set to the maximum.</p>
+              <h3 className="text-2xl font-semibold mb-4">Build your career with Java</h3>
+              <p className="text-gray-600 mb-4">Enhance your Java skills and improve your job opportunities.</p>
               <Link to="/courses/java" className="text-blue-600 font-semibold hover:underline">
                 Learn More
               </Link>
