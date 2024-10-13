@@ -2,6 +2,8 @@ import User from '../models/user.model.js';
 import bcryptjs from 'bcryptjs';
 import { errorHandler } from '../utils/error.js';
 import jwt from 'jsonwebtoken';
+import Doctor from '../models/doctor.model.js'; // Import Doctor model
+
 
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
@@ -17,23 +19,33 @@ export const signup = async (req, res, next) => {
 
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
+
   try {
-    const validUser = await User.findOne({ email });
-    if (!validUser) return next(errorHandler(404, 'User not found'));
+      // First check if the user exists in the User model
+      let validUser = await User.findOne({ email });
 
-    const validPassword = bcryptjs.compareSync(password, validUser.password);
-    if (!validPassword) return next(errorHandler(401, 'Wrong credentials'));
+      // If not found in User, check in Doctor model
+      if (!validUser) {
+          validUser = await Doctor.findOne({ email });
+          if (!validUser) return next(errorHandler(404, 'User/Doctor not found'));
+      }
 
-    const token = jwt.sign({ id: validUser._id, isAdmin: validUser.isAdmin }, process.env.JWT_SECRET);
+      // Verify the password
+      const validPassword = bcryptjs.compareSync(password, validUser.password);
+      if (!validPassword) return next(errorHandler(401, 'Wrong credentials'));
 
-    const { password: hashedPassword, ...rest } = validUser._doc;
-    const expiryDate = new Date(Date.now() + 86400000); // 1 hour
-    res
-      .cookie('access_token', token, { httpOnly: true, expires: expiryDate })
-      .status(200)
-      .json({ ...rest, token, role: validUser.isAdmin ? 'admin' : 'user' });
+      // Generate JWT token
+      const token = jwt.sign({ id: validUser._id, isAdmin: validUser.isAdmin, isDoctor: validUser.isDoctor }, process.env.JWT_SECRET);
+
+      // Exclude the password from the response
+      const { password: hashedPassword, ...rest } = validUser._doc;
+      const expiryDate = new Date(Date.now() + 86400000); // 1 day
+      res
+          .cookie('access_token', token, { httpOnly: true, expires: expiryDate })
+          .status(200)
+          .json({ ...rest, token, role: validUser.isAdmin ? 'admin' : (validUser.isDoctor ? 'doctor' : 'user') });
   } catch (error) {
-    next(error);
+      next(error);
   }
 };
 

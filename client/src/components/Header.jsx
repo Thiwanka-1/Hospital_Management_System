@@ -7,10 +7,16 @@ export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const [menuOpen, setMenuOpen] = useState(false); // Mobile menu state
 
-  // Toggle dropdown visibility
+  // Toggle dropdown visibility for user profile
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
+  };
+
+  // Toggle mobile menu visibility
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
   };
 
   // Close dropdown when clicking outside of it
@@ -26,99 +32,101 @@ export default function Header() {
     };
   }, []);
 
+  // Determine the profile link based on user role and ID
+  const getProfileLink = () => {
+    if (currentUser.isAdmin) {
+      return '/admin-profile';
+    } else if (currentUser.isDoctor) {
+      return `/doctor-profile/${currentUser._id}`; // Pass doctor ID for the profile link
+    } else {
+      return `/profile`; // Pass user ID for normal profile link
+    }
+  };
+
   return (
     <div className="bg-slate-200">
       <div className="flex justify-between items-center max-w-full mx-auto py-2 px-9">
         {/* Left Section: Logo */}
         <div className="flex items-center space-x-1">
-          <img src={logo} alt="EduCode Logo" className="h-16" />
+          <img src={logo} alt="EduCode Logo" className="h-12 md:h-16" />
           <Link to='/'>
-            <h1 className='font-bold text-2xl'>EduCode</h1>
+            <h1 className='font-bold text-xl md:text-2xl'>MediZen</h1>
           </Link>
         </div>
 
         {/* Right Section: Navigation Links */}
-        <ul className='flex gap-3 items-center'>
-          <li>
-            <Link to='/'>Home</Link>
-          </li>
-          <li>
-            <Link to='/about'>About Us</Link>
-          </li>
-          <li>
-            <Link to='/contact'>Contact Us</Link>
-          </li>
-          <li>
-            <Link to="/play-quiz">Play Quiz</Link>
-          </li>
-          <li>
-            <Link to="/questions">Questions</Link>
-          </li>
-          <li className="relative">
-            {/* Dropdown for Courses */}
-            <button onClick={toggleDropdown} className="focus:outline-none">
-              Courses
-            </button>
-            {dropdownOpen && (
-              <div
-                ref={dropdownRef}
-                className="absolute right-0 mt-2 bg-white border border-gray-300 rounded-md shadow-lg z-50"
-              >
-                <Link
-                  to="/courses/c"
-                  className="block px-4 py-2 hover:bg-gray-100"
-                  onClick={() => setDropdownOpen(false)}
-                >
-                  C
+        <div className="hidden md:flex gap-3 items-center">
+          <ul className="flex gap-3 items-center">
+            <li>
+              <Link to='/'>Home</Link>
+            </li>
+            <li>
+              <Link to='/about'>About Us</Link>
+            </li>
+            <li>
+              <Link to='/contact'>Contact Us</Link>
+            </li>
+            
+            {currentUser ? (
+              <li>
+                <Link to={getProfileLink()}>
+                  <img
+                    src={currentUser.profilePicture}
+                    alt='profile'
+                    className='h-8 w-8 rounded-full object-cover'
+                  />
                 </Link>
-                <Link
-                  to="/courses/cpp"
-                  className="block px-4 py-2 hover:bg-gray-100"
-                  onClick={() => setDropdownOpen(false)}
-                >
-                  C++
-                </Link>
-                <Link
-                  to="/courses/java"
-                  className="block px-4 py-2 hover:bg-gray-100"
-                  onClick={() => setDropdownOpen(false)}
-                >
-                  Java
-                </Link>
-                <Link
-                  to="/courses/python"
-                  className="block px-4 py-2 hover:bg-gray-100"
-                  onClick={() => setDropdownOpen(false)}
-                >
-                  Python
-                </Link>
-              </div>
+              </li>
+            ) : (
+              <li>
+                <Link to='/sign-in'>Sign In</Link>
+              </li>
             )}
-          </li>
+          </ul>
+        </div>
 
-          {/* Conditionally render IDE link based on authentication */}
-          <li>
-            <Link to='/ide'>IDE</Link>
-          </li>
-
-          {/* Conditional rendering for profile picture */}
-          {currentUser ? (
-            <li>
-              <Link to={currentUser.isAdmin ? '/admin-profile' : '/profile'}>
-                <img
-                  src={currentUser.profilePicture}
-                  alt='profile'
-                  className='h-8 w-8 rounded-full object-cover'
-                />
-              </Link>
-            </li>
-          ) : (
-            <li>
-              <Link to='/sign-in'>Sign In</Link>
-            </li>
-          )}
-        </ul>
+        {/* Burger Menu for Mobile */}
+        <div className="md:hidden">
+          <button onClick={toggleMenu} className="focus:outline-none">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {menuOpen && (
+        <div className="md:hidden bg-slate-100">
+          <ul className="flex flex-col space-y-2 p-4">
+            <li>
+              <Link to='/' onClick={() => setMenuOpen(false)}>Home</Link>
+            </li>
+            <li>
+              <Link to='/about' onClick={() => setMenuOpen(false)}>About Us</Link>
+            </li>
+            <li>
+              <Link to='/contact' onClick={() => setMenuOpen(false)}>Contact Us</Link>
+            </li>
+            
+            {currentUser ? (
+              <li>
+                <Link to={getProfileLink()} onClick={() => setMenuOpen(false)}>
+                  <img
+                    src={currentUser.profilePicture}
+                    alt='profile'
+                    className='h-8 w-8 rounded-full object-cover'
+                  />
+                </Link>
+              </li>
+            ) : (
+              <li>
+                <Link to='/sign-in' onClick={() => setMenuOpen(false)}>Sign In</Link>
+              </li>
+            )}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

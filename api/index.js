@@ -6,18 +6,9 @@ import cors from 'cors';
 
 import userRoutes from './routes/user.route.js';
 import authRoutes from './routes/auth.route.js';
-import projectRoutes from './routes/projectRoutes.js'; // Your project CRUD routes
-import routes from './routes/routes.js'; 
-import contactRoutes from './routes/contactRoutes.js';
-import examsRoute from "./routes/examRoutes.js";
-import examsReportRoute from "./routes/examsReportRoute.js";
+import doctorRoutes from './routes/doctor.route.js';
+import appointmentRoutes from './routes/appointment.route.js'; // Import the new appointment routes
 
-import feedbackRoutes from './routes/feedbackroute.js';
-import questionRoutes from './routes/questionRoutes.js';
-
-import courseRoutes from './routes/course.routes.js';
-
-import createRoutes from './routes/create.route.js';
 
 // Load environment variables
 dotenv.config();
@@ -54,19 +45,8 @@ mongoose.connect(process.env.MONGO, {
 // Define API routes
 app.use("/api/user", userRoutes);  // User management routes
 app.use("/api/auth", authRoutes);  // Authentication routes
-app.use('/project', projectRoutes);  // Project CRUD routes
-app.use('/ide', routes);            // IDE code execution routes
-app.use('/api', contactRoutes);
-
-app.use("/api/exams", examsRoute);
-app.use("/api/examsReport", examsReportRoute);
-
-app.use('/api/questions', questionRoutes);
-app.use('/api', feedbackRoutes);
-
-app.use('/api/courses', courseRoutes); // Use the course routes
-
-app.use("/api/create", createRoutes);
+app.use('/api/doctors', doctorRoutes);  // Doctor management routes
+app.use('/api/appointments', appointmentRoutes); // Appointment management routes
 
 
 // Global error handling middleware
