@@ -1,4 +1,3 @@
-// AppointmentBooking.js
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -18,23 +17,44 @@ const AppointmentBooking = () => {
     const [selectedSpecialization, setSelectedSpecialization] = useState('');
     const [filteredDoctors, setFilteredDoctors] = useState([]);
     const [selectedDoctor, setSelectedDoctor] = useState('');
-    const [patientName, setPatientName] = useState(''); // New state for patient name
+    const [patientName, setPatientName] = useState('');
     const [appointmentDetails, setAppointmentDetails] = useState(null);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [errorMessages, setErrorMessages] = useState([]); // Combined error messages
+
     const navigate = useNavigate();
 
+    // Fetch available doctors based on the selected date and specialization
     const fetchAvailableDoctors = async () => {
         if (!selectedDate || !selectedSpecialization) return;
 
-        const response = await fetch(`/api/appointments/available?date=${selectedDate}&specialization=${selectedSpecialization}`);
-        const data = await response.json();
+        try {
+            const response = await fetch(`/api/appointments/available?date=${selectedDate}&specialization=${selectedSpecialization}`);
+            const data = await response.json();
 
-        if (data.length > 0) {
-            setFilteredDoctors(data);
-            setErrorMessage('');
+            if (data.length > 0) {
+                setFilteredDoctors(data);
+                clearError('doctorAvailability');
+            } else {
+                setFilteredDoctors([]);
+                addError('doctorAvailability', 'No doctors available for the selected date and specialization.');
+            }
+        } catch (error) {
+            addError('doctorAvailability', 'Error fetching available doctors.');
+        }
+    };
+
+    // Prevent selecting past dates
+    const minDate = new Date().toISOString().split('T')[0];
+
+    // Handle patient name input, allowing only letters and spaces
+    const handlePatientNameChange = (e) => {
+        const value = e.target.value;
+        const regex = /^[a-zA-Z\s]*$/; // Regex to allow only letters and spaces
+        if (regex.test(value)) {
+            setPatientName(value); // Update state if valid
+            clearError('patientName');
         } else {
-            setFilteredDoctors([]);
-            setErrorMessage('No doctors available for the selected date and specialization.');
+            addError('patientName', 'Patient name can only contain letters and spaces.');
         }
     };
 
@@ -42,7 +62,7 @@ const AppointmentBooking = () => {
         e.preventDefault();
 
         if (!selectedDoctor) {
-            setErrorMessage('Please select a doctor.');
+            addError('doctor', 'Please select a doctor.');
             return;
         }
 
@@ -53,27 +73,45 @@ const AppointmentBooking = () => {
         }
 
         const appointmentData = {
-            userId: userId,
+            userId,
             doctorId: selectedDoctor,
             date: selectedDate,
             channelingCost: filteredDoctors.find(doc => doc._id === selectedDoctor).channelingCost,
-            patientName, // Include patient name
+            patientName,
         };
 
-        const response = await fetch('/api/appointments', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(appointmentData),
-        });
+        try {
+            const response = await fetch('/api/appointments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(appointmentData),
+            });
 
-        const result = await response.json();
-        if (result.success) {
-            setAppointmentDetails(result.newAppointment);
-        } else {
-            setErrorMessage(result.message);
+            const result = await response.json();
+            if (result.success) {
+                // Fetch doctor name separately if not populated correctly
+                const selectedDoctorDetails = filteredDoctors.find((doc) => doc._id === selectedDoctor);
+                setAppointmentDetails({
+                    ...result.newAppointment,
+                    doctorName: selectedDoctorDetails?.name, // Attach doctor name from available doctors list
+                });
+                setErrorMessages([]); // Clear all errors on success
+            } else {
+                addError('submission', result.message);
+            }
+        } catch (error) {
+            addError('submission', 'Error booking appointment.');
         }
+    };
+
+    const addError = (field, message) => {
+        setErrorMessages((prevMessages) => [...prevMessages.filter((err) => err.field !== field), { field, message }]);
+    };
+
+    const clearError = (field) => {
+        setErrorMessages((prevMessages) => prevMessages.filter((err) => err.field !== field));
     };
 
     useEffect(() => {
@@ -82,34 +120,36 @@ const AppointmentBooking = () => {
 
     return (
         <div className="container mx-auto py-8">
-            <h2 className="text-2xl font-bold text-center">Book an Appointment</h2>
-            <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md mt-6">
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700">Patient Name</label>
+            <h2 className="text-3xl font-bold text-center text-indigo-700">Book an Appointment</h2>
+            <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg mt-6">
+                <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Patient Name</label>
                     <input
                         type="text"
                         value={patientName}
-                        onChange={(e) => setPatientName(e.target.value)}
-                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200"
+                        onChange={handlePatientNameChange} // Only allow letters
+                        className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3"
+                        placeholder="Enter your name"
                         required
                     />
                 </div>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700">Select Date</label>
+                <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Select Date</label>
                     <input
                         type="date"
                         value={selectedDate}
                         onChange={(e) => setSelectedDate(e.target.value)}
-                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200"
+                        min={minDate} // Disable past dates
+                        className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3"
                         required
                     />
                 </div>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700">Specialization</label>
+                <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Specialization</label>
                     <select
                         value={selectedSpecialization}
                         onChange={(e) => setSelectedSpecialization(e.target.value)}
-                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200"
+                        className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3"
                         required
                     >
                         <option value="">Select Specialization</option>
@@ -118,12 +158,12 @@ const AppointmentBooking = () => {
                         ))}
                     </select>
                 </div>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700">Select Doctor</label>
+                <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Select Doctor</label>
                     <select
                         value={selectedDoctor}
                         onChange={(e) => setSelectedDoctor(e.target.value)}
-                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200"
+                        className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3"
                         required
                     >
                         <option value="">Select Doctor</option>
@@ -132,29 +172,42 @@ const AppointmentBooking = () => {
                         ))}
                     </select>
                 </div>
-                {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
-                <button type="submit" className="mt-4 w-full bg-indigo-600 text-white font-semibold py-2 rounded-md hover:bg-indigo-700">
+
+                {/* Display all error messages under the form */}
+                {errorMessages.length > 0 && (
+                    <div className="bg-red-100 p-4 rounded-lg mb-6">
+                        {errorMessages.map((error, idx) => (
+                            <p key={idx} className="text-red-500 text-sm">{error.message}</p>
+                        ))}
+                    </div>
+                )}
+
+                <button type="submit" className="w-full bg-indigo-600 text-white font-semibold py-3 rounded-md hover:bg-indigo-700 transition duration-300">
                     Book Appointment
                 </button>
             </form>
 
             {/* Appointment Details Popup */}
             {appointmentDetails && (
-                <div className="fixed inset-0 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-lg shadow-md">
-                        <h3 className="text-lg font-semibold">Appointment Confirmed</h3>
-                        <p>Patient: {appointmentDetails.patientName}</p> {/* Show patient name */}
-                        <p>Doctor: {appointmentDetails.doctorId.name}</p>
-                        <p>Date: {new Date(appointmentDetails.date).toLocaleDateString()}</p>
-                        <p>Appointment Number: {appointmentDetails.appointmentNumber}</p>
-                        <p>Channeling Cost: ${appointmentDetails.channelingCost}</p>
-                        <p>Time: {appointmentDetails.time}</p>
-                        <button
-                            onClick={() => setAppointmentDetails(null)}
-                            className="mt-4 bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700"
-                        >
-                            Close
-                        </button>
+                <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md mx-auto">
+                        <h3 className="text-lg font-semibold text-indigo-700 text-center mb-4">Appointment Confirmed</h3>
+                        <div className="space-y-2 text-center">
+                            <p className="text-gray-700"><strong>Patient:</strong> {appointmentDetails.patientName}</p>
+                            <p className="text-gray-700"><strong>Doctor:</strong> {appointmentDetails.doctorName}</p>
+                            <p className="text-gray-700"><strong>Date:</strong> {new Date(appointmentDetails.date).toLocaleDateString()}</p>
+                            <p className="text-gray-700"><strong>Appointment Number:</strong> {appointmentDetails.appointmentNumber}</p>
+                            <p className="text-gray-700"><strong>Channeling Cost:</strong> ${appointmentDetails.channelingCost}</p>
+                            <p className="text-gray-700"><strong>Time:</strong> {appointmentDetails.time}</p>
+                        </div>
+                        <div className="mt-6 text-center">
+                            <button
+                                onClick={() => setAppointmentDetails(null)}
+                                className="mt-4 bg-indigo-600 text-white font-semibold py-2 px-6 rounded-md hover:bg-indigo-700"
+                            >
+                                Close
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

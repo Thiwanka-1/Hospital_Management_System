@@ -34,7 +34,6 @@ export default function App() {
       <Route path = "/sign-in" element = {<SignIn />} />
       <Route path = "/sign-up" element = {<SignUp />} />
 
-      <Route path="/doctor-profile/:id" element={<DoctorProfile />} />
 
       
 
@@ -45,7 +44,6 @@ export default function App() {
 
         <Route path="/appointments/book" element={<AppointmentBooking />} />
         <Route path="/appointments/my" element={<UserAppointments />} />
-        <Route path="/doctor/appointments" element={<DoctorAppointments />} />
         <Route path="/appointments/update/:id" element={<UpdateAppointment />} /> {/* New route for updating appointments */}
 
       </Route>
@@ -56,6 +54,11 @@ export default function App() {
         <Route path = "/add-doc" element = {<DoctorForm />} />
         <Route path="/doctor-list" element={<DoctorList />} />
       </Route>
+
+      <Route element={<PrivateRoute doctorOnly={true} />}>
+          <Route path="/doctor/appointments" element={<DoctorAppointments />} />
+          <Route path="/doctor-profile/:id" element={<DoctorProfile />} />
+        </Route>
     </Routes>
   
   </BrowserRouter>

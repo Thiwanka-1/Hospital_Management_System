@@ -1,4 +1,3 @@
-// UserAppointments.jsx
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -46,50 +45,61 @@ const UserAppointments = () => {
     };
 
     return (
-        <div className="container mx-auto py-8">
-            <h2 className="text-2xl font-bold text-center">My Appointments</h2>
-            {errorMessage && <p className="text-red-500 text-sm text-center">{errorMessage}</p>}
-            <table className="min-w-full mt-6 bg-white shadow-md rounded-lg overflow-hidden">
-                <thead>
-                    <tr className="w-full bg-indigo-600 text-white">
-                        <th className="py-2 px-4">Appointment Number</th>
-                        <th className="py-2 px-4">Doctor</th>
-                        <th className="py-2 px-4">Specialization</th>
-                        <th className="py-2 px-4">Date</th>
-                        <th className="py-2 px-4">Time Range</th>
-                        <th className="py-2 px-4">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {appointments.map(appointment => (
-                        <tr key={appointment._id} className="border-b">
-                            <td className="py-2 px-4">{appointment.appointmentNumber}</td>
-                            <td className="py-2 px-4">{appointment.doctorId.name}</td>
-                            <td className="py-2 px-4">{appointment.doctorId.specialization}</td>
-                            <td className="py-2 px-4">{new Date(appointment.date).toLocaleDateString()}</td>
-                            <td className="py-2 px-4">
-                                {appointment.doctorId.timeRanges.length > 0 
-                                    ? `${appointment.doctorId.timeRanges[0].from} - ${appointment.doctorId.timeRanges[0].to}` 
-                                    : 'Time not available'}
-                            </td>
-                            <td className="py-2 px-4">
-                                <Link
-                                    to={`/appointments/update/${appointment._id}`} 
-                                    className="text-blue-600 hover:underline mr-4"
-                                >
-                                    Update
-                                </Link>
-                                <button
-                                    onClick={() => handleCancel(appointment._id)}
-                                    className="text-red-600 hover:underline"
-                                >
-                                    Cancel
-                                </button>
-                            </td>
+        <div className="container mx-auto px-4 py-8">
+            <h2 className="text-3xl font-bold text-center text-indigo-700 mb-8">My Appointments</h2>
+            {errorMessage && <p className="text-red-500 text-sm text-center mb-4">{errorMessage}</p>}
+
+            <div className="overflow-x-auto">
+                <table className="min-w-full bg-white shadow-lg rounded-lg overflow-hidden">
+                    <thead>
+                        <tr className="bg-indigo-700 text-white">
+                            <th className="py-4 px-6 text-left text-sm font-semibold tracking-wider">Appointment Number</th>
+                            <th className="py-4 px-6 text-left text-sm font-semibold tracking-wider">Patient Name</th>
+                            <th className="py-4 px-6 text-left text-sm font-semibold tracking-wider">Doctor</th>
+                            <th className="py-4 px-6 text-left text-sm font-semibold tracking-wider">Specialization</th>
+                            <th className="py-4 px-6 text-left text-sm font-semibold tracking-wider">Date</th>
+                            <th className="py-4 px-6 text-left text-sm font-semibold tracking-wider">Time Range</th>
+                            <th className="py-4 px-6 text-center text-sm font-semibold tracking-wider">Actions</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                        {appointments.length === 0 ? (
+                            <tr>
+                                <td colSpan="7" className="py-4 px-6 text-center text-gray-500">No appointments found.</td>
+                            </tr>
+                        ) : (
+                            appointments.map((appointment) => (
+                                <tr key={appointment._id} className="hover:bg-gray-50">
+                                    <td className="py-4 px-6">{appointment.appointmentNumber}</td>
+                                    <td className="py-4 px-6">{appointment.patientName}</td>
+                                    <td className="py-4 px-6">{appointment.doctorId.name}</td>
+                                    <td className="py-4 px-6">{appointment.doctorId.specialization}</td>
+                                    <td className="py-4 px-6">{new Date(appointment.date).toLocaleDateString()}</td>
+                                    <td className="py-4 px-6">
+                                        {appointment.doctorId.timeRanges.length > 0
+                                            ? `${appointment.doctorId.timeRanges[0].from} - ${appointment.doctorId.timeRanges[0].to}`
+                                            : 'Not available'}
+                                    </td>
+                                    <td className="py-4 px-6 text-center">
+                                        <Link
+                                            to={`/appointments/update/${appointment._id}`}
+                                            className="inline-block text-blue-600 hover:text-blue-900 transition duration-300"
+                                        >
+                                            Update
+                                        </Link>
+                                        <button
+                                            onClick={() => handleCancel(appointment._id)}
+                                            className="ml-4 inline-block text-red-600 hover:text-red-900 transition duration-300"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };
