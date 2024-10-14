@@ -3,13 +3,17 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import path from 'path'; // Import the path module
 
 import userRoutes from './routes/user.route.js';
 import authRoutes from './routes/auth.route.js';
 import doctorRoutes from './routes/doctor.route.js';
 import appointmentRoutes from './routes/appointment.route.js'; // Import the new appointment routes
 import reportRoutes from './routes/report.route.js';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Load environment variables
 dotenv.config();
@@ -40,17 +44,15 @@ mongoose.connect(process.env.MONGO, {
   process.exit(1); // Exit the process if MongoDB connection fails
 });
 
-// Routes (make sure your routes are properly set up and imported)
-// IDE run code routes
+// Serve static files from the 'reports' directory
+app.use('/reports', express.static(path.join(__dirname, 'reports'))); // Add this line to serve the reports
 
-// Define API routes
+// Routes (make sure your routes are properly set up and imported)
 app.use("/api/user", userRoutes);  // User management routes
 app.use("/api/auth", authRoutes);  // Authentication routes
 app.use('/api/doctors', doctorRoutes);  // Doctor management routes
 app.use('/api/appointments', appointmentRoutes); // Appointment management routes
-app.use('/api/reports', reportRoutes);
-
-
+app.use('/api/reports', reportRoutes); // Report routes
 
 // Global error handling middleware
 app.use((err, req, res, next) => {
