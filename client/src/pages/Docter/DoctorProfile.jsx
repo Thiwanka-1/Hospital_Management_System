@@ -153,9 +153,19 @@ export default function DoctorProfile() {
       return;
     }
 
+    // Format timeRanges for submission
+    const formattedTimeRanges = Object.keys(formData.timeRanges).map(day => ({
+      day: day,
+      from: formData.timeRanges[day].from || '', // Ensure a value is set
+      to: formData.timeRanges[day].to || '',     // Ensure a value is set
+    })).filter(range => range.from && range.to); // Only keep ranges that have both values
+
+    // Include formatted time ranges in the form data
+    const updatedFormData = { ...formData, timeRanges: formattedTimeRanges };
+
     try {
       dispatch(updateUserStart());
-      const res = await axios.put(`http://localhost:3000/api/doctors/update/${currentUser._id}`, formData); // Update the doctor profile
+      const res = await axios.put(`http://localhost:3000/api/doctors/update/${currentUser._id}`, updatedFormData); // Update the doctor profile
       dispatch(updateUserSuccess(res.data));
       setUpdateSuccess(true);
     } catch (error) {
@@ -166,15 +176,34 @@ export default function DoctorProfile() {
   const handleDeleteAccount = async () => {
     try {
       dispatch(deleteUserStart());
-      await axios.delete(`http://localhost:3000/api/user/delete/${currentUser._id}`); // Delete the doctor account
-      dispatch(deleteUserSuccess());
-      alert('Account deleted successfully!');
-      navigate('/sign-in'); // Redirect to sign-in after account deletion
+  
+      const doctorId = currentUser._id; // Ensure this is the doctor ID
+      console.log('Deleting doctor ID:', doctorId); // Log the doctor ID in the frontend to verify it's correct
+  
+      const config = {
+        withCredentials: true, // Make sure cookies are sent
+      };
+  
+      // Ensure the correct API endpoint is called for deleting a doctor
+      const response = await axios.delete(`http://localhost:3000/api/doctors/delete/${doctorId}`, config);
+  
+      if (response.status === 200) {
+        dispatch(deleteUserSuccess()); // Dispatch success if deletion is successful
+        alert('Doctor account deleted successfully!');
+        navigate('/sign-in'); // Redirect to sign-in page after account deletion
+      } else {
+        throw new Error('Failed to delete doctor account');
+      }
     } catch (error) {
-      dispatch(deleteUserFailure(error));
+      dispatch(deleteUserFailure(error)); // Dispatch failure action in case of error
+      console.error('Error deleting doctor account:', error); // Log error for debugging
+      alert('An error occurred while deleting the account.');
     }
   };
-
+  
+  
+  
+  
   // Sign-out function
   const handleSignOut = async () => {
     try {

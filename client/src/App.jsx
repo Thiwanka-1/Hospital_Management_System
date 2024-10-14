@@ -36,18 +36,11 @@ export default function App() {
       <Route path = "/sign-in" element = {<SignIn />} />
       <Route path = "/sign-up" element = {<SignUp />} />
 
-
-      
-
-
       <Route element={<PrivateRoute />}>
         <Route path = "/profile" element = {<Profile />} />
-
-
         <Route path="/appointments/book" element={<AppointmentBooking />} />
         <Route path="/appointments/my" element={<UserAppointments />} />
-        <Route path="/appointments/update/:id" element={<UpdateAppointment />} /> {/* New route for updating appointments */}
-
+        <Route path="/appointments/update/:id" element={<UpdateAppointment />} /> 
       </Route>
 
       <Route element={<PrivateRoute adminOnly={true} />}>

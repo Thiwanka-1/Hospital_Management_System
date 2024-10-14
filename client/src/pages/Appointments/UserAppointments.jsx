@@ -70,13 +70,13 @@ const UserAppointments = () => {
                         ) : (
                             appointments.map((appointment) => (
                                 <tr key={appointment._id} className="hover:bg-gray-50">
-                                    <td className="py-4 px-6">{appointment.appointmentNumber}</td>
+                                    <td className="py-4 px-14">{appointment.appointmentNumber}</td>
                                     <td className="py-4 px-6">{appointment.patientName}</td>
-                                    <td className="py-4 px-6">{appointment.doctorId.name}</td>
-                                    <td className="py-4 px-6">{appointment.doctorId.specialization}</td>
+                                    <td className="py-4 px-6">{appointment.doctorId ? appointment.doctorId.name : 'Unknown Doctor'}</td>
+                                    <td className="py-4 px-6">{appointment.doctorId ? appointment.doctorId.specialization : 'N/A'}</td>
                                     <td className="py-4 px-6">{new Date(appointment.date).toLocaleDateString()}</td>
                                     <td className="py-4 px-6">
-                                        {appointment.doctorId.timeRanges.length > 0
+                                        {appointment.doctorId && appointment.doctorId.timeRanges.length > 0
                                             ? `${appointment.doctorId.timeRanges[0].from} - ${appointment.doctorId.timeRanges[0].to}`
                                             : 'Not available'}
                                     </td>

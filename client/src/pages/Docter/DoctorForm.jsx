@@ -27,7 +27,6 @@ const specializations = [
   'Rheumatology',
   'Anesthesiology',
   'Pathology',
-  // Add more specializations as needed
 ];
 
 export default function DoctorForm() {
@@ -45,11 +44,18 @@ export default function DoctorForm() {
     e.preventDefault();
     setError(''); // Reset error message
 
+    // Prepare timeRanges based on selected availableDates and their time input
+    const formattedTimeRanges = availableDates.map((day) => ({
+      day: day,
+      from: timeRanges[day]?.from || '', // Ensure a value is set
+      to: timeRanges[day]?.to || '',     // Ensure a value is set
+    })).filter(range => range.from && range.to); // Only keep ranges that have both values
+
     const formData = {
       name,
       specialization,
       availableDates,
-      timeRanges,
+      timeRanges: formattedTimeRanges, // Use the formatted time ranges
       maxAppointmentsPerDay,
       channelingCost,
       email,
@@ -57,8 +63,8 @@ export default function DoctorForm() {
     };
 
     try {
-        await axios.post('http://localhost:3000/api/doctors/add', formData);
-        alert('Doctor added successfully');
+      await axios.post('http://localhost:3000/api/doctors/add', formData);
+      alert('Doctor added successfully');
       // Reset form fields
       setName('');
       setSpecialization('');
@@ -84,13 +90,13 @@ export default function DoctorForm() {
   };
 
   const handleTimeRangeChange = (day, field, value) => {
-    setTimeRanges({
-      ...timeRanges,
+    setTimeRanges(prevState => ({
+      ...prevState,
       [day]: {
-        ...timeRanges[day],
+        ...prevState[day],
         [field]: value,
       },
-    });
+    }));
   };
 
   return (

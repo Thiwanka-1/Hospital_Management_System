@@ -24,7 +24,7 @@ const doctorSchema = new mongoose.Schema({
     },
     isDoctor: {
         type: Boolean,
-        default: true, // All entries in the Doctor model are doctors
+        default: true,
     },
     availableDates: {
         type: [String], // Example: ['Monday', 'Tuesday']
@@ -32,9 +32,9 @@ const doctorSchema = new mongoose.Schema({
     },
     timeRanges: {
         type: [{
-            day: String,
-            from: String,
-            to: String,
+            day: { type: String, required: true },
+            from: { type: String, required: true },
+            to: { type: String, required: true },
         }],
         required: true,
     },

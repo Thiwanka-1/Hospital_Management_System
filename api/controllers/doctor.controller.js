@@ -4,45 +4,45 @@ import bcryptjs from 'bcryptjs';
 
 // Add a new doctor
 export const addDoctor = async (req, res) => {
-    const { name, specialization, email, password, availableDates, timeRanges, maxAppointmentsPerDay, channelingCost } = req.body;
-  
-    // Input validation
-    if (!name || !specialization || !email || !password || !availableDates || !timeRanges || !maxAppointmentsPerDay || !channelingCost) {
-      return res.status(400).json({ success: false, message: 'All fields are required' });
+  const { name, specialization, email, password, availableDates, timeRanges, maxAppointmentsPerDay, channelingCost } = req.body;
+
+  // Input validation
+  if (!name || !specialization || !email || !password || !availableDates || !timeRanges || !maxAppointmentsPerDay || !channelingCost) {
+    return res.status(400).json({ success: false, message: 'All fields are required' });
+  }
+
+  try {
+    // Check if the email is already in use by another doctor
+    const existingDoctor = await Doctor.findOne({ email });
+    if (existingDoctor) {
+      return res.status(400).json({ success: false, message: 'Email is already in use by another doctor' });
     }
-  
-    try {
-      // Check if the email is already in use by another doctor
-      const existingDoctor = await Doctor.findOne({ email });
-      if (existingDoctor) {
-        return res.status(400).json({ success: false, message: 'Email is already in use by another doctor' });
-      }
-  
-      // Hash the password
-      const hashedPassword = bcryptjs.hashSync(password, 10);
-  
-      // Create a new doctor instance
-      const newDoctor = new Doctor({
-        name,
-        specialization,
-        email,
-        password: hashedPassword, // Store the hashed password
-        availableDates, // Array of available days
-        timeRanges, // Array of objects for time ranges
-        maxAppointmentsPerDay,
-        channelingCost,
-      });
-  
-      // Save the new doctor to the database
-      await newDoctor.save();
-      
-      // Respond with success message
-      res.status(201).json({ success: true, message: 'Doctor added successfully' });
-    } catch (error) {
-      console.error('Error creating doctor:', error); // Log the error for debugging
-      return res.status(500).json({ success: false, message: 'Error creating doctor', error: error.message });
-    }
-  };
+
+    // Hash the password
+    const hashedPassword = bcryptjs.hashSync(password, 10);
+
+    // Create a new doctor instance
+    const newDoctor = new Doctor({
+      name,
+      specialization,
+      email,
+      password: hashedPassword, // Store the hashed password
+      availableDates, // Array of available days
+      timeRanges, // Object containing time ranges
+      maxAppointmentsPerDay,
+      channelingCost,
+    });
+
+    // Save the new doctor to the database
+    await newDoctor.save();
+    
+    // Respond with success message
+    res.status(201).json({ success: true, message: 'Doctor added successfully' });
+  } catch (error) {
+    console.error('Error creating doctor:', error);
+    return res.status(500).json({ success: false, message: 'Error creating doctor', error: error.message });
+  }
+};
 
 
 // Get all doctors
@@ -56,6 +56,7 @@ export const getDoctors = async (req, res) => {
 };
 
 // Update a doctor
+// Update a doctor
 export const updateDoctor = async (req, res) => {
   try {
     const updatedDoctor = await Doctor.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -65,6 +66,7 @@ export const updateDoctor = async (req, res) => {
     res.status(500).json({ message: 'Error updating doctor', error: err.message });
   }
 };
+
 
 // Delete a doctor
 export const deleteDoctor = async (req, res) => {

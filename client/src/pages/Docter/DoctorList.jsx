@@ -17,7 +17,7 @@ export default function DoctorList() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/doctors/${id}`);
+      await axios.delete(`/api/doctors/delete/${id}`);
       setDoctors(doctors.filter(doctor => doctor._id !== id));
       alert('Doctor deleted successfully');
     } catch (err) {
