@@ -86,10 +86,13 @@ export default function Header() {
               <Link to='/'>Home</Link>
             </li>
             <li>
-              <Link to='/about'>About Us</Link>
+              <Link to='/about'>Remote Consulting</Link>
             </li>
             <li>
-              <Link to='/contact'>Contact Us</Link>
+              <Link to='/contact'>Track Treatemetns</Link>
+            </li>
+            <li>
+              <Link to='/contact'>Patient Records</Link>
             </li>
 
             {currentUser ? (

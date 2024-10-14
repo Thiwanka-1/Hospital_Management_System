@@ -139,7 +139,7 @@ const DoctorAppointments = () => {
 
     return (
         <div className="container mx-auto py-8 px-4">
-            <h2 className="text-3xl font-bold text-center text-indigo-700 mb-6">My Appointments</h2>
+            <h2 className="text-3xl font-bold text-center text-indigo-700 mb-6">Doctor Appointments</h2>
             {errorMessage && <p className="text-red-500 text-sm text-center">{errorMessage}</p>}
 
             <button
