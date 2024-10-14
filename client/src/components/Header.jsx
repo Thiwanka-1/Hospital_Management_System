@@ -2,12 +2,29 @@ import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import logo from "./logo.png";
 import { useState, useEffect, useRef } from 'react';
+import axios from 'axios'; // Import axios for API call
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [doctorProfile, setDoctorProfile] = useState(null); // State to store doctor profile
   const dropdownRef = useRef(null);
-  const [menuOpen, setMenuOpen] = useState(false); // Mobile menu state
+
+  // Fetch the doctor's profile if the current user is a doctor
+  useEffect(() => {
+    if (currentUser && currentUser.isDoctor) {
+      const fetchDoctorProfile = async () => {
+        try {
+          const response = await axios.get(`http://localhost:3000/api/doctors/doc/${currentUser._id}`);
+          setDoctorProfile(response.data); // Store doctor profile information
+        } catch (error) {
+          console.error('Error fetching doctor profile:', error);
+        }
+      };
+      fetchDoctorProfile();
+    }
+  }, [currentUser]);
 
   // Toggle dropdown visibility for user profile
   const toggleDropdown = () => {
@@ -43,12 +60,21 @@ export default function Header() {
     }
   };
 
+  // Get the profile picture for user/doctor
+  const getProfilePicture = () => {
+    if (currentUser.isDoctor && doctorProfile) {
+      return doctorProfile.profilePicture || '/default-profile.png'; // Use doctor profile picture
+    } else {
+      return currentUser.profilePicture || '/default-profile.png'; // Use user profile picture
+    }
+  };
+
   return (
     <div className="bg-slate-200">
       <div className="flex justify-between items-center max-w-full mx-auto py-2 px-9">
         {/* Left Section: Logo */}
         <div className="flex items-center space-x-1">
-          <img src={logo} alt="EduCode Logo" className="h-12 md:h-16" />
+          <img src={logo} alt="MediZen Logo" className="h-12 md:h-16" />
           <Link to='/'>
             <h1 className='font-bold text-xl md:text-2xl'>MediZen</h1>
           </Link>
@@ -66,12 +92,12 @@ export default function Header() {
             <li>
               <Link to='/contact'>Contact Us</Link>
             </li>
-            
+
             {currentUser ? (
               <li>
                 <Link to={getProfileLink()}>
                   <img
-                    src={currentUser.profilePicture}
+                    src={getProfilePicture()} // Get profile picture dynamically
                     alt='profile'
                     className='h-8 w-8 rounded-full object-cover'
                   />
@@ -108,12 +134,12 @@ export default function Header() {
             <li>
               <Link to='/contact' onClick={() => setMenuOpen(false)}>Contact Us</Link>
             </li>
-            
+
             {currentUser ? (
               <li>
                 <Link to={getProfileLink()} onClick={() => setMenuOpen(false)}>
                   <img
-                    src={currentUser.profilePicture}
+                    src={getProfilePicture()} // Get profile picture dynamically
                     alt='profile'
                     className='h-8 w-8 rounded-full object-cover'
                   />
