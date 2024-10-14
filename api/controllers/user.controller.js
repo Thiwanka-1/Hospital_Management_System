@@ -67,16 +67,16 @@ export const getAllUsers = async (req, res, next) => {
 // delete user
 export const deleteUser = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.id); // Find the user or doctor making the request
+    const user = await User.findById(req.user.id); // Find the user making the request
 
     if (!user) {
       return next(errorHandler(404, 'User not found'));
     }
 
-    // If the user is an admin, doctor, or the owner of the account, allow deletion
-    if (user.isAdmin || req.user.id === req.params.id || user.isDoctor) {
+    // Only allow deletion if the user is an admin or if the user is deleting their own account
+    if (user.isAdmin || req.user.id === req.params.id) {
       await User.findByIdAndDelete(req.params.id);
-      return res.status(200).json({ message: 'Account has been deleted successfully.' });
+      return res.status(200).json({ message: 'User has been deleted successfully.' });
     } else {
       return next(errorHandler(403, 'You do not have permission to delete this account.'));
     }
@@ -84,4 +84,3 @@ export const deleteUser = async (req, res, next) => {
     next(error);
   }
 };
-
