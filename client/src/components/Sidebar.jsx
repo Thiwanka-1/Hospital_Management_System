@@ -43,6 +43,16 @@ export default function Sidebar() {
                 Appointments
               </Link>
             </li>
+            <li className="mb-4">
+              <Link to="/search-patients" className="hover:text-gray-300">
+                Upload Report
+              </Link>
+            </li>
+            <li className="mb-4">
+              <Link to="/view-reports" className="hover:text-gray-300">
+                View Reports
+              </Link>
+            </li>
           </>
         )}
 
