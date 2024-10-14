@@ -10,7 +10,7 @@ export default function Sidebar() {
   return (
     <div className="mt-20 sidebar w-64 h-full bg-gray-800 text-white fixed top-0 left-0">
       <h2 className="text-2xl font-bold p-4">
-        {currentUser.isAdmin ? 'Admin Menu' : currentUser.isDoctor ? 'Doctor Menu' : 'User Menu'}
+        {currentUser.isAdmin ? 'Admin Menu' : currentUser.isDoctor ? 'Doctor Menu' : 'Patient Menu'}
       </h2>
       <ul className="p-4">
         
@@ -32,6 +32,7 @@ export default function Sidebar() {
                 Manage Doctors
               </Link>
             </li>
+            
           </>
         )}
 
@@ -67,6 +68,11 @@ export default function Sidebar() {
             <li className="mb-4">
               <Link to="/appointments/my" className="hover:text-gray-300">
                 My Appointments
+              </Link>
+            </li>
+            <li className="mb-4">
+              <Link to="/appointments/my" className="hover:text-gray-300">
+                Lab Reports
               </Link>
             </li>
           </>
