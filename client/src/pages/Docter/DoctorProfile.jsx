@@ -153,9 +153,19 @@ export default function DoctorProfile() {
       return;
     }
 
+    // Format timeRanges for submission
+    const formattedTimeRanges = Object.keys(formData.timeRanges).map(day => ({
+      day: day,
+      from: formData.timeRanges[day].from || '', // Ensure a value is set
+      to: formData.timeRanges[day].to || '',     // Ensure a value is set
+    })).filter(range => range.from && range.to); // Only keep ranges that have both values
+
+    // Include formatted time ranges in the form data
+    const updatedFormData = { ...formData, timeRanges: formattedTimeRanges };
+
     try {
       dispatch(updateUserStart());
-      const res = await axios.put(`http://localhost:3000/api/doctors/update/${currentUser._id}`, formData); // Update the doctor profile
+      const res = await axios.put(`http://localhost:3000/api/doctors/update/${currentUser._id}`, updatedFormData); // Update the doctor profile
       dispatch(updateUserSuccess(res.data));
       setUpdateSuccess(true);
     } catch (error) {

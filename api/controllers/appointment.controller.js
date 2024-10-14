@@ -79,42 +79,51 @@ export const getUserAppointments = async (req, res) => {
 };
 
 // Update an appointment
+// Update an appointment
+// Update an appointment
 export const updateAppointment = async (req, res) => {
     try {
         const { doctorId, date } = req.body;
         const appointmentId = req.params.id;
 
-        // Fetch the doctor to validate available days
-        const doctor = await Doctor.findById(doctorId);
-        if (!doctor) return res.status(404).json({ message: 'Doctor not found' });
-
-        const selectedDay = new Date(date).toLocaleString('en-US', { weekday: 'long' });
-
-        // Check if the selected date matches the doctor's available days
-        const isAvailable = doctor.timeRanges.some((range) => range.day === selectedDay);
-        if (!isAvailable) {
-            return res.status(400).json({ message: `Doctor is not available on ${selectedDay}` });
-        }
-
-        // Get all existing appointments for the selected doctor on the selected date
-        const appointmentsForSelectedDate = await Appointment.find({ doctorId, date, status: 'upcoming' });
-
-        // Check if the doctor is fully booked on the selected date
-        if (appointmentsForSelectedDate.length >= doctor.maxAppointmentsPerDay) {
-            return res.status(400).json({ message: 'Doctor is fully booked on this date' });
-        }
-
-        // Fetch the appointment to update
+        // Fetch the current appointment
         const currentAppointment = await Appointment.findById(appointmentId);
+        if (!currentAppointment) {
+            return res.status(404).json({ message: 'Appointment not found' });
+        }
 
-        // Check if the date is being changed
-        if (currentAppointment.date !== date) {
-            // Shift appointment numbers for the current date
-            const appointmentsForOldDate = await Appointment.find({ 
-                doctorId: currentAppointment.doctorId, 
-                date: currentAppointment.date, 
-                status: 'upcoming', 
-                appointmentNumber: { $gt: currentAppointment.appointmentNumber } 
+        // If rescheduling to a different date, check availability only for the new date
+        if (currentAppointment.date.toISOString() !== new Date(date).toISOString()) {
+            // Fetch the doctor to validate available days
+            const doctor = await Doctor.findById(doctorId);
+            if (!doctor) return res.status(404).json({ message: 'Doctor not found' });
+
+            const selectedDay = new Date(date).toLocaleString('en-US', { weekday: 'long' });
+
+            // Check if the selected date matches the doctor's available days
+            const isAvailable = doctor.timeRanges.some((range) => range.day === selectedDay);
+            if (!isAvailable) {
+                return res.status(400).json({ message: `Doctor is not available on ${selectedDay}` });
+            }
+
+            // Get all existing appointments for the selected doctor on the selected date
+            const appointmentsForSelectedDate = await Appointment.find({
+                doctorId,
+                date,
+                status: 'upcoming',
+            });
+
+            // Check if the doctor is fully booked on the selected date
+            if (appointmentsForSelectedDate.length >= doctor.maxAppointmentsPerDay) {
+                return res.status(400).json({ message: 'Doctor is fully booked on this date' });
+            }
+
+            // Adjust appointment numbers for the old date (if the date is changing)
+            const appointmentsForOldDate = await Appointment.find({
+                doctorId: currentAppointment.doctorId,
+                date: currentAppointment.date,
+                status: 'upcoming',
+                appointmentNumber: { $gt: currentAppointment.appointmentNumber }
             });
 
             // Update the appointment numbers for patients booked later on the original date
@@ -135,6 +144,7 @@ export const updateAppointment = async (req, res) => {
         res.status(500).json({ success: false, message: 'Error updating appointment', error: error.message });
     }
 };
+
 
 
 
@@ -167,13 +177,27 @@ export const getAvailableDoctors = async (req, res) => {
 // appointment.controller.js
 export const getDoctorAppointments = async (req, res) => {
     const { doctorId } = req.params;
+    const { date } = req.query; // Get the date from the query parameters
 
     try {
-        const appointments = await Appointment.find({ doctorId }).populate('userId', 'name');
+        // Define a query object for Mongoose
+        let query = { doctorId };
+
+        // If a date is provided, filter appointments by that date
+        if (date) {
+            const selectedDate = new Date(date);
+            query.date = {
+                $gte: selectedDate.setHours(0, 0, 0, 0), // Start of the day
+                $lt: selectedDate.setHours(23, 59, 59, 999), // End of the day
+            };
+        }
+
+        // Fetch appointments from the database
+        const appointments = await Appointment.find(query).populate('userId', 'name');
         res.json(appointments);
     } catch (error) {
-        console.error('Error fetching doctor appointments:', error); // Log the error
-        res.status(500).json({ success: false, message: 'Error fetching appointments', error: error.message });
+        console.error('Error fetching doctor appointments:', error);
+        res.status(500).json({ message: 'Error fetching appointments' });
     }
 };
 

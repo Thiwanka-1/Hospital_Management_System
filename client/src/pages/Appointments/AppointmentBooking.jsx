@@ -60,52 +60,54 @@ const AppointmentBooking = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         if (!selectedDoctor) {
             addError('doctor', 'Please select a doctor.');
             return;
         }
-
+    
         const userId = currentUser._id;
         if (!userId) {
             console.error('Invalid user ID');
             return;
         }
-
+    
         const appointmentData = {
             userId,
             doctorId: selectedDoctor,
             date: selectedDate,
-            channelingCost: filteredDoctors.find(doc => doc._id === selectedDoctor).channelingCost,
+            channelingCost: filteredDoctors.find(doc => doc._id === selectedDoctor)?.channelingCost,
             patientName,
         };
-
+    
+        console.log(appointmentData); // Log appointment data
+    
         try {
-            const response = await fetch('/api/appointments', {
+            const response = await fetch('http://localhost:3000/api/appointments', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(appointmentData),
             });
-
+    
             const result = await response.json();
             if (result.success) {
-                // Fetch doctor name separately if not populated correctly
                 const selectedDoctorDetails = filteredDoctors.find((doc) => doc._id === selectedDoctor);
                 setAppointmentDetails({
                     ...result.newAppointment,
-                    doctorName: selectedDoctorDetails?.name, // Attach doctor name from available doctors list
+                    doctorName: selectedDoctorDetails?.name,
                 });
-                setErrorMessages([]); // Clear all errors on success
+                setErrorMessages([]);
             } else {
                 addError('submission', result.message);
             }
         } catch (error) {
+            console.error(error); // Log the error
             addError('submission', 'Error booking appointment.');
         }
     };
-
+    
     const addError = (field, message) => {
         setErrorMessages((prevMessages) => [...prevMessages.filter((err) => err.field !== field), { field, message }]);
     };

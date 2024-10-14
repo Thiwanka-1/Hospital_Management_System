@@ -18,12 +18,11 @@ const UpdateAppointment = () => {
     const [selectedSpecialization, setSelectedSpecialization] = useState('');
     const [filteredDoctors, setFilteredDoctors] = useState([]);
     const [selectedDoctor, setSelectedDoctor] = useState('');
-    const [errorMessages, setErrorMessages] = useState([]);
     const [availableAppointments, setAvailableAppointments] = useState(null);
-    const [doctorAvailableDays, setDoctorAvailableDays] = useState([]); // Keep track of available days
+    const [errorMessages, setErrorMessages] = useState([]);
     const navigate = useNavigate();
 
-    // Fetch available doctors based on the selected date and specialization
+    // Fetch available doctors based on selected date and specialization
     const fetchAvailableDoctors = async () => {
         if (!selectedDate || !selectedSpecialization) return;
 
@@ -43,7 +42,7 @@ const UpdateAppointment = () => {
         }
     };
 
-    // Fetch doctor availability and slots remaining
+    // Check doctor's availability on the selected day
     const checkDoctorAvailability = async () => {
         if (!selectedDoctor || !selectedDate) return;
 
@@ -57,51 +56,40 @@ const UpdateAppointment = () => {
             // Check if doctor is available on the selected day
             const isAvailable = doctor.timeRanges.some((range) => range.day === selectedDay);
 
-            // Show error if doctor is not available on this day
             if (!isAvailable) {
-                setAvailableAppointments(0); // No appointments allowed if doctor isn't available
+                setAvailableAppointments(0); // Doctor not available on selected day
                 addError('doctorAvailability', `Doctor is not available on ${selectedDay}.`);
                 return;
             }
 
-            // If the doctor is available, check if fully booked
-            if (appointments.length >= doctor.maxAppointmentsPerDay) {
-                setAvailableAppointments(0);
-                addError('doctorAvailability', 'The doctor is fully booked on the selected date.');
-            } else {
-                setAvailableAppointments(doctor.maxAppointmentsPerDay - appointments.length);
-                clearError('doctorAvailability');
-            }
+            // Check if the doctor is fully booked for the selected date
+            // if (appointments.length >= doctor.maxAppointmentsPerDay) {
+            //     setAvailableAppointments(0);
+            //     addError('doctorAvailability', 'The doctor is fully booked on the selected date.');
+            // } else {
+            //     setAvailableAppointments(doctor.maxAppointmentsPerDay - appointments.length);
+            //     clearError('doctorAvailability');
+            // }
         } catch (error) {
             addError('doctorAvailability', 'Error checking doctor availability.');
         }
     };
 
+    // Fetch available doctors when date or specialization changes
     useEffect(() => {
         fetchAvailableDoctors();
     }, [selectedDate, selectedSpecialization]);
 
+    // Check doctor's availability when doctor or date changes
     useEffect(() => {
         checkDoctorAvailability();
     }, [selectedDoctor, selectedDate]);
-
-    const handleSpecializationChange = (e) => {
-        setSelectedSpecialization(e.target.value);
-        setSelectedDoctor('');
-        setAvailableAppointments(null);
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!selectedDoctor) {
             addError('doctor', 'Please select a doctor.');
-            return;
-        }
-        const selectedDay = new Date(selectedDate).toLocaleString('en-US', { weekday: 'long' });
-
-        if (availableAppointments === 0) {
-            addError('doctorAvailability', `Doctor is not available on ${selectedDay}.`);
             return;
         }
 
@@ -132,9 +120,6 @@ const UpdateAppointment = () => {
         }
     };
 
-    // Disable past dates in the date picker
-    const minDate = new Date().toISOString().split('T')[0];
-
     const addError = (field, message) => {
         setErrorMessages((prevMessages) => [...prevMessages.filter((err) => err.field !== field), { field, message }]);
     };
@@ -142,6 +127,9 @@ const UpdateAppointment = () => {
     const clearError = (field) => {
         setErrorMessages((prevMessages) => prevMessages.filter((err) => err.field !== field));
     };
+
+    // Disable past dates in the date picker
+    const minDate = new Date().toISOString().split('T')[0];
 
     return (
         <div className="container mx-auto py-8">
@@ -162,7 +150,7 @@ const UpdateAppointment = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Specialization</label>
                     <select
                         value={selectedSpecialization}
-                        onChange={handleSpecializationChange}
+                        onChange={(e) => setSelectedSpecialization(e.target.value)}
                         className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3"
                         required
                     >
