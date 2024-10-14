@@ -74,9 +74,8 @@ export default function Header() {
       <div className="flex justify-between items-center max-w-full mx-auto py-2 px-9">
         {/* Left Section: Logo */}
         <div className="flex items-center space-x-1">
-          <img src={logo} alt="MediZen Logo" className="h-12 md:h-16" />
           <Link to='/'>
-            <h1 className='font-bold text-xl md:text-2xl'>MediZen</h1>
+          <img src={logo} alt="MediZen Logo" className="h-12 md:h-16" />
           </Link>
         </div>
 
