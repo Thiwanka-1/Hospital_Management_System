@@ -3,23 +3,40 @@ import {
   uploadReport, 
   getReports, 
   updateReport, 
-  deleteReport } from '../controllers/report.controller.js';
+  deleteReport 
+} from '../controllers/report.controller.js';
 import { verifyToken, verifyDoctor } from '../utils/verifyUser.js'; // Assume verifyDoctor checks if the user is a doctor
 import multer from 'multer'; // Middleware for handling file uploads
+import path from 'path'; // Import path for handling file directories
+import fs from 'fs';
+import { fileURLToPath } from 'url'; // Required for __dirname in ES modules
+
+// Define __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Set the destination folder for file uploads
-
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './reports')
+  destination: (req, file, cb) => {
+    const uploadDir = path.join(__dirname, '..', 'reports');
+    
+    // Check if the directory exists, and create it if it doesn't
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    
+    cb(null, uploadDir); // Store the file in 'reports' folder
   },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now()
-    cb(null,uniqueSuffix + '-' + file.originalname)
+  filename: (req, file, cb) => {
+    // Use Date.now() to ensure each file has a unique name
+    const uniqueSuffix = Date.now() + '-' + file.originalname;
+    cb(null, uniqueSuffix); // The file will be named with the original name + timestamp
   }
-})
+});
 
-const upload = multer({ storage: storage })
+// Initialize multer with the defined storage configuration
+const upload = multer({ storage: storage });
+
 const router = express.Router();
 
 // POST: Doctor uploads a report

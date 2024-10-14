@@ -95,3 +95,13 @@ export const getAllNonDoctorsAndAdmins = async (req, res, next) => {
       next(error);
   }
 };
+
+export const getAllPatients = async (req, res) => {
+  try {
+    // Fetch users who are not admins or doctors
+    const patients = await User.find({ isAdmin: false, isDoctor: false }, 'username email profilePicture');
+    res.status(200).json(patients);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching patients' });
+  }
+};

@@ -6,6 +6,7 @@ import {
   verifyAdmin,
   getAllUsers,
   getAllNonDoctorsAndAdmins,
+  getAllPatients,
 } from '../controllers/user.controller.js';
 import { verifyToken } from '../utils/verifyUser.js';
 
@@ -15,7 +16,7 @@ router.get('/', test);
 router.post('/update/:id', verifyToken, updateUser);
 router.delete('/delete/:id', verifyToken, deleteUser);
 router.get('/all', verifyToken, getAllUsers);
-router.get('/allPatients', verifyToken, getAllNonDoctorsAndAdmins);
+router.get('/allPatients', verifyToken, getAllPatients);
 
 
 router.get('/admin', verifyToken, verifyAdmin, (req, res) => {

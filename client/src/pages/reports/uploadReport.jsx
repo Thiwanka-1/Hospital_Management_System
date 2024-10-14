@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const UploadReportForm = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { userName, patientId } = location.state; // Retrieve patientId from passed state
+    const { userName, patientId } = location.state; // Retrieve patientId and userName from passed state
 
     const [reportType, setReportType] = useState('');
     const [testType, setTestType] = useState('');
@@ -14,22 +14,18 @@ const UploadReportForm = () => {
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    // Handle radio buttons for test type
-    const handleRadioChange = (e) => {
-        setTestType(e.target.value);
-    };
-
+    // Handle form submission
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         const formData = new FormData();
         formData.append('patientId', patientId);
         formData.append('reportType', reportType);
         formData.append('testType', testType);
         formData.append('reportIssuedDate', reportIssuedDate);
         formData.append('reportFile', reportFile);
-
+    
         try {
             const res = await axios.post('/api/reports/upload', formData, {
                 headers: {
@@ -37,7 +33,7 @@ const UploadReportForm = () => {
                 },
                 withCredentials: true,
             });
-
+    
             if (res.data.success) {
                 setSuccessMessage('Your report has been submitted successfully.');
                 setTimeout(() => {
@@ -45,43 +41,46 @@ const UploadReportForm = () => {
                 }, 3000);
             }
         } catch (err) {
-            console.error('Error during form submission:', err);
+            console.error('Error during form submission:', err); // Log the full error object
+            console.log('Error response data:', err.response?.data); // Log error response data for better visibility
             setErrorMessage('There was an error submitting your report. Please try again.');
         }
     };
+    
 
-    // Render test type options based on report type selection
+
+    // Render test type options based on selected report type
     const renderTestTypes = () => {
         switch (reportType) {
             case 'Lab Report':
                 return (
                     <>
-                        <label className="inline-flex items-center">
+                        <label>
                             <input
                                 type="radio"
                                 name="testType"
                                 value="Blood Count"
-                                onChange={handleRadioChange}
+                                onChange={(e) => setTestType(e.target.value)}
                                 className="mr-2"
                             />
                             Blood Count
                         </label>
-                        <label className="inline-flex items-center">
+                        <label>
                             <input
                                 type="radio"
                                 name="testType"
                                 value="Urin Test"
-                                onChange={handleRadioChange}
+                                onChange={(e) => setTestType(e.target.value)}
                                 className="mr-2"
                             />
                             Urin Test
                         </label>
-                        <label className="inline-flex items-center">
+                        <label>
                             <input
                                 type="radio"
                                 name="testType"
                                 value="Tumor Markers"
-                                onChange={handleRadioChange}
+                                onChange={(e) => setTestType(e.target.value)}
                                 className="mr-2"
                             />
                             Tumor Markers
@@ -91,32 +90,32 @@ const UploadReportForm = () => {
             case 'Radiology Report':
                 return (
                     <>
-                        <label className="inline-flex items-center">
+                        <label>
                             <input
                                 type="radio"
                                 name="testType"
                                 value="X-Ray"
-                                onChange={handleRadioChange}
+                                onChange={(e) => setTestType(e.target.value)}
                                 className="mr-2"
                             />
                             X-Ray
                         </label>
-                        <label className="inline-flex items-center">
+                        <label>
                             <input
                                 type="radio"
                                 name="testType"
                                 value="MRI"
-                                onChange={handleRadioChange}
+                                onChange={(e) => setTestType(e.target.value)}
                                 className="mr-2"
                             />
                             MRI
                         </label>
-                        <label className="inline-flex items-center">
+                        <label>
                             <input
                                 type="radio"
                                 name="testType"
                                 value="CT Scan"
-                                onChange={handleRadioChange}
+                                onChange={(e) => setTestType(e.target.value)}
                                 className="mr-2"
                             />
                             CT Scan
@@ -126,32 +125,32 @@ const UploadReportForm = () => {
             case 'Pathology Report':
                 return (
                     <>
-                        <label className="inline-flex items-center">
+                        <label>
                             <input
                                 type="radio"
                                 name="testType"
                                 value="Anatomical Pathology"
-                                onChange={handleRadioChange}
+                                onChange={(e) => setTestType(e.target.value)}
                                 className="mr-2"
                             />
                             Anatomical Pathology
                         </label>
-                        <label className="inline-flex items-center">
+                        <label>
                             <input
                                 type="radio"
                                 name="testType"
                                 value="Clinical Pathology"
-                                onChange={handleRadioChange}
+                                onChange={(e) => setTestType(e.target.value)}
                                 className="mr-2"
                             />
                             Clinical Pathology
                         </label>
-                        <label className="inline-flex items-center">
+                        <label>
                             <input
                                 type="radio"
                                 name="testType"
                                 value="Molecular Pathology"
-                                onChange={handleRadioChange}
+                                onChange={(e) => setTestType(e.target.value)}
                                 className="mr-2"
                             />
                             Molecular Pathology
@@ -164,11 +163,9 @@ const UploadReportForm = () => {
     };
 
     return (
-        <div>
-            {/* Form Title */}
+        <div className="container mx-auto p-6">
             <h2 className="text-2xl font-bold text-center mb-6">Upload Medical Records</h2>
 
-            {/* Form Content */}
             <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg space-y-6">
                 {/* Patient Name (read-only) */}
                 <div>

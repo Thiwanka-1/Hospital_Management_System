@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { useNavigate } from 'react-router-dom';
 
 export default function ManageUsers() {
   const [users, setUsers] = useState([]);
@@ -10,7 +8,7 @@ export default function ManageUsers() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const navigate = useNavigate(); // Initialize navigation
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -24,8 +22,9 @@ export default function ManageUsers() {
         });
         const data = await res.json();
         if (res.ok) {
+          console.log("Fetched users:", data); // Debugging: check if email and profilePicture are available
           setUsers(data);
-          setFilteredUsers(data); // Initialize filteredUsers with the full user list
+          setFilteredUsers(data);
         } else {
           setError(data.message || 'Failed to fetch users');
         }
@@ -49,8 +48,7 @@ export default function ManageUsers() {
 
   // Function to navigate to upload report page
   const uploadReport = (userId, username) => {
-    // Navigate to the upload report page with userId and username as parameters via state
-    navigate(`/upload-report/${userId}`, { state: { userName: username } });
+    navigate(`/upload-report/${userId}`, { state: { userName: username, patientId: userId } });
   };
 
   if (loading) {
@@ -65,7 +63,6 @@ export default function ManageUsers() {
     <div className="max-w-4xl mx-auto p-5">
       <h1 className="text-3xl font-bold mb-6 text-center">Registered Patients</h1>
 
-      {/* Search input field */}
       <div className="mb-6">
         <input
           type="text"
@@ -91,17 +88,18 @@ export default function ManageUsers() {
             <tr key={user._id}>
               <td className="py-2 px-4 border-b">
                 <img
-                  src={user.profilePicture}
+                  src={user.profilePicture || 'https://static.vecteezy.com/system/resources/previews/013/215/160/non_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-vector.jpg'}
                   alt="profile"
                   className="h-10 w-10 rounded-full object-cover"
+                  onError={(e) => e.target.src = 'https://static.vecteezy.com/system/resources/previews/013/215/160/non_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-vector.jpg'} // Fallback image if loading fails
                 />
               </td>
               <td className="py-2 px-4 border-b">{user.username}</td>
-              <td className="py-2 px-4 border-b">{user.email}</td>
+              <td className="py-2 px-4 border-b">{user.email || 'N/A'}</td>
               <td className="py-2 px-4 border-b">{user.isAdmin ? 'Admin' : 'User'}</td>
               <td className="py-2 px-4 border-b">
                 <button
-                  onClick={() => uploadReport(user._id, user.username)} // Pass userId and username to uploadReport
+                  onClick={() => uploadReport(user._id, user.username)}
                   className="bg-blue-500 text-white py-1 px-2 rounded-lg"
                 >
                   Upload Report

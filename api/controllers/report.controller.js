@@ -13,19 +13,16 @@ const isValidFileType = (file) => {
 // Upload a report (Doctors only)
 export const uploadReport = async (req, res, next) => {
     const { patientId, reportType, testType, reportIssuedDate } = req.body;
-    const doctorId = req.user.id; // Assuming the doctor is authenticated
+    
+    console.log("Received patientId:", patientId); // Debug to check the value
 
     if (!patientId || !reportType || !testType || !reportIssuedDate || !req.file) {
         return next(errorHandler(400, 'All fields are required, including the file.'));
     }
 
-    if (!isValidFileType(req.file)) {
-        return next(errorHandler(400, 'Invalid file type. Only PDF or image files are allowed.'));
-    }
-
     try {
         const newReport = new Report({
-            doctor: doctorId,
+            doctor: req.user.id, // Assuming the doctor is authenticated
             patient: patientId,
             reportFile: req.file.path,
             reportType,
@@ -35,10 +32,12 @@ export const uploadReport = async (req, res, next) => {
         await newReport.save();
         res.status(201).json({ message: 'Report uploaded successfully', report: newReport });
     } catch (error) {
-        console.error('Error saving report:', error);
+        console.error("Error saving report:", error);
         next(error);
     }
 };
+
+
 
 
 // Get all reports for a patient (Patient can only see their own reports)
