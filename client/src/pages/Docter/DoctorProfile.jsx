@@ -176,15 +176,34 @@ export default function DoctorProfile() {
   const handleDeleteAccount = async () => {
     try {
       dispatch(deleteUserStart());
-      await axios.delete(`http://localhost:3000/api/user/delete/${currentUser._id}`); // Delete the doctor account
-      dispatch(deleteUserSuccess());
-      alert('Account deleted successfully!');
-      navigate('/sign-in'); // Redirect to sign-in after account deletion
+  
+      const doctorId = currentUser._id; // Ensure this is the doctor ID
+      console.log('Deleting doctor ID:', doctorId); // Log the doctor ID in the frontend to verify it's correct
+  
+      const config = {
+        withCredentials: true, // Make sure cookies are sent
+      };
+  
+      // Ensure the correct API endpoint is called for deleting a doctor
+      const response = await axios.delete(`http://localhost:3000/api/doctors/delete/${doctorId}`, config);
+  
+      if (response.status === 200) {
+        dispatch(deleteUserSuccess()); // Dispatch success if deletion is successful
+        alert('Doctor account deleted successfully!');
+        navigate('/sign-in'); // Redirect to sign-in page after account deletion
+      } else {
+        throw new Error('Failed to delete doctor account');
+      }
     } catch (error) {
-      dispatch(deleteUserFailure(error));
+      dispatch(deleteUserFailure(error)); // Dispatch failure action in case of error
+      console.error('Error deleting doctor account:', error); // Log error for debugging
+      alert('An error occurred while deleting the account.');
     }
   };
-
+  
+  
+  
+  
   // Sign-out function
   const handleSignOut = async () => {
     try {
