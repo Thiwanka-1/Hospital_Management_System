@@ -8,6 +8,7 @@ import userRoutes from './routes/user.route.js';
 import authRoutes from './routes/auth.route.js';
 import doctorRoutes from './routes/doctor.route.js';
 import appointmentRoutes from './routes/appointment.route.js'; // Import the new appointment routes
+import reportRoutes from './routes/report.route.js';
 
 
 // Load environment variables
@@ -47,6 +48,8 @@ app.use("/api/user", userRoutes);  // User management routes
 app.use("/api/auth", authRoutes);  // Authentication routes
 app.use('/api/doctors', doctorRoutes);  // Doctor management routes
 app.use('/api/appointments', appointmentRoutes); // Appointment management routes
+app.use('/api/reports', reportRoutes);
+
 
 
 // Global error handling middleware

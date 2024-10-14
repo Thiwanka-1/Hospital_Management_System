@@ -15,3 +15,12 @@ export const verifyToken = (req, res, next) => {
   });
 };
 
+export const verifyDoctor = async (req, res, next) => {
+  try {
+      const doctor = await Doctor.findById(req.user.id);
+      if (!doctor) return next(errorHandler(403, 'Doctor access required!'));
+      next();
+  } catch (error) {
+      next(error);
+  }
+};

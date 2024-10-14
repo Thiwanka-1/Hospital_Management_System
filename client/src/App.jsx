@@ -21,6 +21,8 @@ import UserAppointments from './pages/Appointments/UserAppointments';
 import DoctorAppointments from './pages/Appointments/DoctorAppointments';
 import UpdateAppointment from './pages/Appointments/UpdateAppointment';
 
+import UploadReportForm from './pages/reports/uploadReport';
+import SearchPatients from './pages/reports/searchPatients';
 
 
 
@@ -58,7 +60,12 @@ export default function App() {
       <Route element={<PrivateRoute doctorOnly={true} />}>
           <Route path="/doctor/appointments" element={<DoctorAppointments />} />
           <Route path="/doctor-profile/:id" element={<DoctorProfile />} />
-        </Route>
+          <Route path="/upload-report" element={<UploadReportForm />} />
+          <Route path="/upload-report/:patientId" element={<UploadReportForm />} />
+      </Route>
+
+      <Route path="/search-patients" element={<SearchPatients />} />
+
     </Routes>
   
   </BrowserRouter>

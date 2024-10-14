@@ -84,3 +84,14 @@ export const deleteUser = async (req, res, next) => {
     next(error);
   }
 };
+
+
+// Get all users except doctors and admins
+export const getAllNonDoctorsAndAdmins = async (req, res, next) => {
+  try {
+      const users = await User.find({ isDoctor: false, isAdmin: false }, 'username');
+      res.status(200).json(users);
+  } catch (error) {
+      next(error);
+  }
+};
