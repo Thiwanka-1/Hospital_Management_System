@@ -103,3 +103,22 @@ export const deleteReport = async (req, res, next) => {
         next(error);
     }
 };
+
+
+// Get all reports uploaded by the authenticated doctor
+export const getReportsByDoctor = async (req, res, next) => {
+    const doctorId = req.user.id;
+    try {
+        const reports = await Report.find({ doctor: doctorId })
+            .populate({ path: 'patient', model: 'User', select: 'name' }); // Explicitly populate
+        
+        console.log("Retrieved Reports:", reports); // Debug: Check if patient names are included
+
+        res.status(200).json(reports);
+    } catch (error) {
+        console.error("Error in getReportsByDoctor:", error);
+        next(error);
+    }
+};
+
+

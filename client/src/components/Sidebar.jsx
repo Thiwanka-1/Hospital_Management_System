@@ -60,7 +60,7 @@ export default function Sidebar() {
               </Link>
             </li>
             <li className="mb-4">
-              <Link to="/view-reports" className="hover:text-gray-300">
+              <Link to="/view-reports-doctor" className="hover:text-gray-300">
                 View Reports
               </Link>
             </li>

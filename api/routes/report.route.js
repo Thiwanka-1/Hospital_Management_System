@@ -3,7 +3,8 @@ import {
   uploadReport, 
   getReports, 
   updateReport, 
-  deleteReport 
+  deleteReport, 
+  getReportsByDoctor
 } from '../controllers/report.controller.js';
 import { verifyToken, verifyDoctor } from '../utils/verifyUser.js'; // Assume verifyDoctor checks if the user is a doctor
 import multer from 'multer'; // Middleware for handling file uploads
@@ -50,5 +51,8 @@ router.put('/:reportId', verifyToken, verifyDoctor, upload.single('reportFile'),
 
 // DELETE: Doctor deletes a report
 router.delete('/:reportId', verifyToken, verifyDoctor, deleteReport);
+
+// GET: Doctor gets their own uploaded reports
+router.get('/doctor', verifyToken, verifyDoctor, getReportsByDoctor);
 
 export default router;
