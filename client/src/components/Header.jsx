@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import logo from "./logo.png";
-import { useState, useEffect, useRef } from 'react';
-import axios from 'axios'; // Import axios for API call
+import { useState, useEffect, useRef } from "react";
+import axios from "axios"; // Import axios for API call
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
@@ -16,10 +16,12 @@ export default function Header() {
     if (currentUser && currentUser.isDoctor) {
       const fetchDoctorProfile = async () => {
         try {
-          const response = await axios.get(`http://localhost:3000/api/doctors/doc/${currentUser._id}`);
+          const response = await axios.get(
+            `http://localhost:3000/api/doctors/doc/${currentUser._id}`
+          );
           setDoctorProfile(response.data); // Store doctor profile information
         } catch (error) {
-          console.error('Error fetching doctor profile:', error);
+          console.error("Error fetching doctor profile:", error);
         }
       };
       fetchDoctorProfile();
@@ -52,7 +54,7 @@ export default function Header() {
   // Determine the profile link based on user role and ID
   const getProfileLink = () => {
     if (currentUser.isAdmin) {
-      return '/admin-profile';
+      return "/admin-profile";
     } else if (currentUser.isDoctor) {
       return `/doctor-profile/${currentUser._id}`; // Pass doctor ID for the profile link
     } else {
@@ -63,9 +65,9 @@ export default function Header() {
   // Get the profile picture for user/doctor
   const getProfilePicture = () => {
     if (currentUser.isDoctor && doctorProfile) {
-      return doctorProfile.profilePicture || '/default-profile.png'; // Use doctor profile picture
+      return doctorProfile.profilePicture || "/default-profile.png"; // Use doctor profile picture
     } else {
-      return currentUser.profilePicture || '/default-profile.png'; // Use user profile picture
+      return currentUser.profilePicture || "/default-profile.png"; // Use user profile picture
     }
   };
 
@@ -74,8 +76,8 @@ export default function Header() {
       <div className="flex justify-between items-center max-w-full mx-auto py-2 px-9">
         {/* Left Section: Logo */}
         <div className="flex items-center space-x-1">
-          <Link to='/'>
-          <img src={logo} alt="MediZen Logo" className="h-12 md:h-16" />
+          <Link to="/">
+            <img src={logo} alt="MediZen Logo" className="h-12 md:h-16" />
           </Link>
         </div>
 
@@ -83,16 +85,16 @@ export default function Header() {
         <div className="hidden md:flex gap-3 items-center">
           <ul className="flex gap-3 items-center">
             <li>
-              <Link to='/'>Home</Link>
+              <Link to="/">Home</Link>
             </li>
             <li>
-              <Link to='/about'>Remote Consulting</Link>
+              <Link to="/about">About Us</Link>
             </li>
             <li>
-              <Link to='/contact'>Track Treatemetns</Link>
+              <Link to="/patient-treatment">My Treatment</Link>
             </li>
             <li>
-              <Link to='/contact'>Patient Records</Link>
+              <Link to="/contact">Contact Us</Link>
             </li>
 
             {currentUser ? (
@@ -100,14 +102,14 @@ export default function Header() {
                 <Link to={getProfileLink()}>
                   <img
                     src={getProfilePicture()} // Get profile picture dynamically
-                    alt='profile'
-                    className='h-8 w-8 rounded-full object-cover'
+                    alt="profile"
+                    className="h-8 w-8 rounded-full object-cover"
                   />
                 </Link>
               </li>
             ) : (
               <li>
-                <Link to='/sign-in'>Sign In</Link>
+                <Link to="/sign-in">Sign In</Link>
               </li>
             )}
           </ul>
@@ -116,8 +118,19 @@ export default function Header() {
         {/* Burger Menu for Mobile */}
         <div className="md:hidden">
           <button onClick={toggleMenu} className="focus:outline-none">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path>
             </svg>
           </button>
         </div>
@@ -128,13 +141,24 @@ export default function Header() {
         <div className="md:hidden bg-slate-100">
           <ul className="flex flex-col space-y-2 p-4">
             <li>
-              <Link to='/' onClick={() => setMenuOpen(false)}>Home</Link>
+              <Link to="/" onClick={() => setMenuOpen(false)}>
+                Home
+              </Link>
             </li>
             <li>
-              <Link to='/about' onClick={() => setMenuOpen(false)}>About Us</Link>
+              <Link to="/about" onClick={() => setMenuOpen(false)}>
+                About Us
+              </Link>
             </li>
             <li>
-              <Link to='/contact' onClick={() => setMenuOpen(false)}>Contact Us</Link>
+              <Link to="/contact" onClick={() => setMenuOpen(false)}>
+                Contact Us
+              </Link>
+            </li>
+            <li>
+              <Link to="/patient-treatment" onClick={() => setMenuOpen(false)}>
+                My Treatment
+              </Link>
             </li>
 
             {currentUser ? (
@@ -142,14 +166,16 @@ export default function Header() {
                 <Link to={getProfileLink()} onClick={() => setMenuOpen(false)}>
                   <img
                     src={getProfilePicture()} // Get profile picture dynamically
-                    alt='profile'
-                    className='h-8 w-8 rounded-full object-cover'
+                    alt="profile"
+                    className="h-8 w-8 rounded-full object-cover"
                   />
                 </Link>
               </li>
             ) : (
               <li>
-                <Link to='/sign-in' onClick={() => setMenuOpen(false)}>Sign In</Link>
+                <Link to="/sign-in" onClick={() => setMenuOpen(false)}>
+                  Sign In
+                </Link>
               </li>
             )}
           </ul>

@@ -3,10 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import OAuth from '../components/OAuth';
 
 export default function SignUp() {
-  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+  const [formData, setFormData] = useState({ username: '', name: '', email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const validate = () => {
@@ -15,6 +15,9 @@ export default function SignUp() {
 
     if (formData.username.length < 8) {
       newErrors.username = 'Username must be at least 8 characters long';
+    }
+    if (!formData.name) {
+      newErrors.name = 'Name is required';
     }
     if (!emailRegex.test(formData.email)) {
       newErrors.email = 'Please enter a valid email';
@@ -49,7 +52,6 @@ export default function SignUp() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      console.log(data);
       setLoading(false);
       if (data.success === false) {
         setErrors({ server: 'Sign up failed. Please try again.' });
@@ -66,6 +68,14 @@ export default function SignUp() {
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl text-center font-semibold my-7'>Sign Up</h1>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
+        <input
+          type='text'
+          placeholder='Name'
+          id='name'
+          className='bg-slate-100 p-3 rounded-lg'
+          onChange={handleChange}
+        />
+        {errors.name && <p className="text-red-500">{errors.name}</p>}
         <input
           type='text'
           placeholder='Username'
@@ -90,7 +100,6 @@ export default function SignUp() {
             className='bg-slate-100 p-3 rounded-lg w-full'
             onChange={handleChange}
           />
-          {errors.password && <p className="text-red-500">{errors.password}</p>}
           <button
             type='button'
             onClick={() => setShowPassword(!showPassword)}
@@ -99,6 +108,7 @@ export default function SignUp() {
             {showPassword ? 'Hide' : 'Show'}
           </button>
         </div>
+        {errors.password && <p className="text-red-500">{errors.password}</p>}
         <button
           disabled={loading}
           className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'
@@ -118,3 +128,4 @@ export default function SignUp() {
     </div>
   );
 }
+

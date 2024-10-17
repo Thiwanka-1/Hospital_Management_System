@@ -32,6 +32,16 @@ export default function Sidebar() {
                 Manage Doctors
               </Link>
             </li>
+            <li className="mb-4">
+              <Link to="/messages" className="hover:text-gray-300">
+                Contact Messages
+              </Link>
+            </li>
+            <li className="mb-4">
+              <Link to="/treatment" className="hover:text-gray-300">
+                Treatment Management
+              </Link>
+            </li>
             
           </>
         )}

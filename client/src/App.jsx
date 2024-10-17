@@ -23,6 +23,11 @@ import UpdateAppointment from './pages/Appointments/UpdateAppointment';
 
 import UploadReportForm from './pages/reports/uploadReport';
 import SearchPatients from './pages/reports/searchPatients';
+import ViewMessages from './pages/ViewMessages';
+
+import TreatmentHome from "./pages/Treatment/TreatmentHome";
+import Treatment from "./pages/Treatment/TreatmentPage";
+import PatientTreatment from "./pages/Treatment/PatientTreatment";
 
 
 
@@ -41,6 +46,8 @@ export default function App() {
         <Route path="/appointments/book" element={<AppointmentBooking />} />
         <Route path="/appointments/my" element={<UserAppointments />} />
         <Route path="/appointments/update/:id" element={<UpdateAppointment />} /> 
+        <Route path="/patient-treatment" element={<PatientTreatment />} />
+
       </Route>
 
       <Route element={<PrivateRoute adminOnly={true} />}>
@@ -48,15 +55,20 @@ export default function App() {
         <Route path='/admin-profile' element={<AdminProfile />} />
         <Route path = "/add-doc" element = {<DoctorForm />} />
         <Route path="/doctor-list" element={<DoctorList />} />
+        <Route path='/messages' element={<ViewMessages />} />
+        <Route path="/treatment" element={<TreatmentHome />} />
+        <Route path="/treatment-list/:userId" element={<Treatment />} />
+
       </Route>
 
       <Route element={<PrivateRoute doctorOnly={true} />}>
           <Route path="/doctor/appointments" element={<DoctorAppointments />} />
           <Route path="/doctor-profile/:id" element={<DoctorProfile />} />
           <Route path="/upload-report/:patientId" element={<UploadReportForm />} />
+          <Route path="/search-patients" element={<SearchPatients />} />
+
       </Route>
 
-      <Route path="/search-patients" element={<SearchPatients />} />
 
     </Routes>
   

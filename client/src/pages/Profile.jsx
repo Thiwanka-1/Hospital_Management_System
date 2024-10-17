@@ -131,7 +131,8 @@ export default function Profile() {
 
       <div className="flex-1 p-8 ml-64">
         <h1 className='text-3xl font-semibold text-center mb-7'>Patient Profile</h1>
-        <form onSubmit={handleSubmit} className='flex flex-col gap-4 max-w-lg mx-auto'>
+        <form onSubmit={handleSubmit} className='flex flex-col gap-4 max-w-lg mx-auto'>          
+
           <input
             type='file'
             ref={fileRef}
@@ -159,7 +160,16 @@ export default function Profile() {
               ''
             )}
           </p>
-          
+          <input
+            defaultValue={currentUser.name} // Use current user's name
+            type='text'
+            id='name'
+            placeholder='Name'
+            className='bg-slate-100 rounded-lg p-3'
+            onChange={handleChange}
+          />
+           {errors.name && <p className="text-red-500">{errors.name}</p>}
+
           <input
             defaultValue={currentUser.username}
             type='text'

@@ -11,6 +11,10 @@ import doctorRoutes from './routes/doctor.route.js';
 import appointmentRoutes from './routes/appointment.route.js'; // Import the new appointment routes
 import reportRoutes from './routes/report.route.js';
 import { fileURLToPath } from 'url';
+import contactRoutes from './routes/contactRoutes.js';
+import treatmentRoutes from "./routes/treatment.route.js";
+
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -53,6 +57,10 @@ app.use("/api/auth", authRoutes);  // Authentication routes
 app.use('/api/doctors', doctorRoutes);  // Doctor management routes
 app.use('/api/appointments', appointmentRoutes); // Appointment management routes
 app.use('/api/reports', reportRoutes); // Report routes
+app.use('/api', contactRoutes);
+app.use("/api/treatments", treatmentRoutes);
+
+
 
 // Global error handling middleware
 app.use((err, req, res, next) => {
