@@ -23,16 +23,8 @@ import UpdateAppointment from './pages/Appointments/UpdateAppointment';
 
 import UploadReportForm from './pages/reports/uploadReport';
 import SearchPatients from './pages/reports/searchPatients';
-<<<<<<< HEAD
-import ViewMessages from './pages/ViewMessages';
-
-import TreatmentHome from "./pages/Treatment/TreatmentHome";
-import Treatment from "./pages/Treatment/TreatmentPage";
-import PatientTreatment from "./pages/Treatment/PatientTreatment";
-=======
 import ViewReportsByDoctor from './pages/reports/viewReportsByDoctor';
 import UpdateReportForm from './pages/reports/updateReportDoctor';
->>>>>>> b6c77cb8413d288f16bbfe3bd7a2f776b0896ee5
 
 
 
@@ -70,13 +62,9 @@ export default function App() {
           <Route path="/doctor/appointments" element={<DoctorAppointments />} />
           <Route path="/doctor-profile/:id" element={<DoctorProfile />} />
           <Route path="/upload-report/:patientId" element={<UploadReportForm />} />
-<<<<<<< HEAD
           <Route path="/search-patients" element={<SearchPatients />} />
-
-=======
           <Route path="/view-reports-doctor" element={<ViewReportsByDoctor />} />
           <Route path="/update-reports-doctor/:reportId" element={<UpdateReportForm />} />
->>>>>>> b6c77cb8413d288f16bbfe3bd7a2f776b0896ee5
       </Route>
 
 
