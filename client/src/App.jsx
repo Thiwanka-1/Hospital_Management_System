@@ -25,6 +25,11 @@ import UploadReportForm from './pages/reports/uploadReport';
 import SearchPatients from './pages/reports/searchPatients';
 import ViewReportsByDoctor from './pages/reports/viewReportsByDoctor';
 import UpdateReportForm from './pages/reports/updateReportDoctor';
+import ViewMessages from './pages/ViewMessages';
+
+import TreatmentHome from "./pages/Treatment/TreatmentHome";
+import Treatment from "./pages/Treatment/TreatmentPage";
+import PatientTreatment from "./pages/Treatment/PatientTreatment";
 
 
 

@@ -231,8 +231,8 @@ export default function ContactUs() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-blue-600 text-white py-6 text-center">
-        <p>&copy; 2024 EduCode. Empowering the next generation of coders.</p>
+      <footer className="bg-blue-400 text-white py-6 text-center">
+        <p>&copy; 2024 MediZen. Empowering Your Health.</p>
       </footer>
     </div>
   );

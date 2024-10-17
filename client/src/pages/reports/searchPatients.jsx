@@ -94,12 +94,12 @@ export default function ManageUsers() {
                   onError={(e) => e.target.src = 'https://static.vecteezy.com/system/resources/previews/013/215/160/non_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-vector.jpg'} // Fallback image if loading fails
                 />
               </td>
-              <td className="py-2 px-4 border-b">{user.username}</td>
+              <td className="py-2 px-4 border-b">{user.name}</td>
               <td className="py-2 px-4 border-b">{user.email || 'N/A'}</td>
               <td className="py-2 px-4 border-b">{user.isAdmin ? 'Admin' : 'User'}</td>
               <td className="py-2 px-4 border-b">
                 <button
-                  onClick={() => uploadReport(user._id, user.username)}
+                  onClick={() => uploadReport(user._id, user.name)}
                   className="bg-blue-500 text-white py-1 px-2 rounded-lg"
                 >
                   Upload Report

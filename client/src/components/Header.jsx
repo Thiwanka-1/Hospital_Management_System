@@ -72,8 +72,8 @@ export default function Header() {
   };
 
   return (
-    <div className="bg-slate-200">
-      <div className="flex justify-between items-center max-w-full mx-auto py-2 px-9">
+    <div className="bg-slate-200 z-50"> {/* Add z-index here */}
+      <div className="flex justify-between items-center max-w-full mx-auto py-2 px-9 h-20"> {/* Fixed height of 20 */}
         {/* Left Section: Logo */}
         <div className="flex items-center space-x-1">
           <Link to="/">
@@ -137,50 +137,52 @@ export default function Header() {
       </div>
 
       {/* Mobile Menu Dropdown */}
-      {menuOpen && (
-        <div className="md:hidden bg-slate-100">
-          <ul className="flex flex-col space-y-2 p-4">
-            <li>
-              <Link to="/" onClick={() => setMenuOpen(false)}>
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link to="/about" onClick={() => setMenuOpen(false)}>
-                About Us
-              </Link>
-            </li>
-            <li>
-              <Link to="/contact" onClick={() => setMenuOpen(false)}>
-                Contact Us
-              </Link>
-            </li>
-            <li>
-              <Link to="/patient-treatment" onClick={() => setMenuOpen(false)}>
-                My Treatment
-              </Link>
-            </li>
+      {/* Mobile Menu Dropdown */}
+{menuOpen && (
+  <div className="md:hidden bg-slate-100 h-auto z-50">
+    <ul className="flex flex-col space-y-2 p-4 items-end"> {/* Align items to the right */}
+      <li>
+        <Link to="/" onClick={() => setMenuOpen(false)}>
+          Home
+        </Link>
+      </li>
+      <li>
+        <Link to="/about" onClick={() => setMenuOpen(false)}>
+          About Us
+        </Link>
+      </li>
+      <li>
+        <Link to="/patient-treatment" onClick={() => setMenuOpen(false)}>
+          My Treatment
+        </Link>
+      </li>
+      <li>
+        <Link to="/contact" onClick={() => setMenuOpen(false)}>
+          Contact Us
+        </Link>
+      </li>
 
-            {currentUser ? (
-              <li>
-                <Link to={getProfileLink()} onClick={() => setMenuOpen(false)}>
-                  <img
-                    src={getProfilePicture()} // Get profile picture dynamically
-                    alt="profile"
-                    className="h-8 w-8 rounded-full object-cover"
-                  />
-                </Link>
-              </li>
-            ) : (
-              <li>
-                <Link to="/sign-in" onClick={() => setMenuOpen(false)}>
-                  Sign In
-                </Link>
-              </li>
-            )}
-          </ul>
-        </div>
+      {currentUser ? (
+        <li>
+          <Link to={getProfileLink()} onClick={() => setMenuOpen(false)}>
+            <img
+              src={getProfilePicture()} // Get profile picture dynamically
+              alt="profile"
+              className="h-8 w-8 rounded-full object-cover"
+            />
+          </Link>
+        </li>
+      ) : (
+        <li>
+          <Link to="/sign-in" onClick={() => setMenuOpen(false)}>
+            Sign In
+          </Link>
+        </li>
       )}
+    </ul>
+  </div>
+)}
+
     </div>
   );
 }

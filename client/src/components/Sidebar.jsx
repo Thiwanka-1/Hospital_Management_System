@@ -8,7 +8,7 @@ export default function Sidebar() {
   if (!currentUser) return null;
 
   return (
-    <div className="mt-20 sidebar w-64 h-full bg-gray-800 text-white fixed top-0 left-0">
+    <div className="mt-20 sidebar w-64 h-full bg-gray-800 text-white fixed top-0 left-0 z-40"> {/* Ensure sidebar has lower z-index than header */}
       <h2 className="text-2xl font-bold p-4">
         {currentUser.isAdmin ? 'Admin Menu' : currentUser.isDoctor ? 'Doctor Menu' : 'Patient Menu'}
       </h2>
@@ -42,7 +42,6 @@ export default function Sidebar() {
                 Treatment Management
               </Link>
             </li>
-            
           </>
         )}
 

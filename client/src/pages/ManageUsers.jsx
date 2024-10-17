@@ -66,11 +66,11 @@ export default function ManageUsers() {
 
     // Add title and some information
     doc.setFontSize(18);
-    doc.text('EduCode Registered Users Report', 50, 20);
+    doc.text('MediZen Registered Users Report', 50, 20);
     doc.setFontSize(12);
     doc.text('Generated on: ' + new Date().toLocaleDateString(), 50, 30);
     doc.text('Total Users: ' + users.length, 50, 35);
-    doc.text('EduCode - Your learning platform for coding', 50, 40);
+    doc.text('MediZen - Empowering Your Health.', 50, 40);
 
     // Add a table
     const tableColumn = ['Username', 'Email', 'Role'];
@@ -130,7 +130,7 @@ export default function ManageUsers() {
               </td>
               <td className="py-2 px-4 border-b">{user.username}</td>
               <td className="py-2 px-4 border-b">{user.email}</td>
-              <td className="py-2 px-4 border-b">{user.isAdmin ? 'Admin' : 'User'}</td>
+              <td className="py-2 px-4 border-b">{user.isAdmin ? 'Admin' : 'Patient'}</td>
               <td className="py-2 px-4 border-b">
                 <button
                   onClick={() => deleteUser(user._id)}

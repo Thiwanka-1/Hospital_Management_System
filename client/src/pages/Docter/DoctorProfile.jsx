@@ -1,11 +1,12 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useState, useRef, useEffect } from 'react';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
-import { app } from '../../firebase'; // Import your Firebase app configuration
+import { app } from '../../firebase';
 import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure, signOut } from '../../redux/user/userSlice';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Use navigate for redirection
-import Sidebar from '../../components/Sidebar';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
 
 const daysOfWeek = [
   'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
@@ -37,7 +38,7 @@ const specializations = [
 
 export default function DoctorProfile() {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // For navigation after signing out
+  const navigate = useNavigate();
   const fileRef = useRef(null);
   const [image, setImage] = useState(undefined);
   const [imagePercent, setImagePercent] = useState(0);
@@ -53,13 +54,13 @@ export default function DoctorProfile() {
   });
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [errors, setErrors] = useState({});
-  const { currentUser } = useSelector((state) => state.user); // Assuming currentUser holds the logged-in doctor's data
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (currentUser && currentUser.isDoctor) {
       const fetchDoctorData = async () => {
         try {
-          const response = await axios.get(`http://localhost:3000/api/doctors/doc/${currentUser._id}`); // Fetch doctor profile using current user ID
+          const response = await axios.get(`http://localhost:3000/api/doctors/doc/${currentUser._id}`);
           setFormData(response.data);
         } catch (error) {
           console.error('Error fetching doctor details:', error);
@@ -153,19 +154,17 @@ export default function DoctorProfile() {
       return;
     }
 
-    // Format timeRanges for submission
     const formattedTimeRanges = Object.keys(formData.timeRanges).map(day => ({
       day: day,
-      from: formData.timeRanges[day].from || '', // Ensure a value is set
-      to: formData.timeRanges[day].to || '',     // Ensure a value is set
-    })).filter(range => range.from && range.to); // Only keep ranges that have both values
+      from: formData.timeRanges[day].from || '',
+      to: formData.timeRanges[day].to || '',
+    })).filter(range => range.from && range.to);
 
-    // Include formatted time ranges in the form data
     const updatedFormData = { ...formData, timeRanges: formattedTimeRanges };
 
     try {
       dispatch(updateUserStart());
-      const res = await axios.put(`http://localhost:3000/api/doctors/update/${currentUser._id}`, updatedFormData); // Update the doctor profile
+      const res = await axios.put(`http://localhost:3000/api/doctors/update/${currentUser._id}`, updatedFormData);
       dispatch(updateUserSuccess(res.data));
       setUpdateSuccess(true);
     } catch (error) {
@@ -176,200 +175,201 @@ export default function DoctorProfile() {
   const handleDeleteAccount = async () => {
     try {
       dispatch(deleteUserStart());
-  
-      const doctorId = currentUser._id; // Ensure this is the doctor ID
-      console.log('Deleting doctor ID:', doctorId); // Log the doctor ID in the frontend to verify it's correct
-  
+
+      const doctorId = currentUser._id;
       const config = {
-        withCredentials: true, // Make sure cookies are sent
+        withCredentials: true,
       };
-  
-      // Ensure the correct API endpoint is called for deleting a doctor
+
       const response = await axios.delete(`http://localhost:3000/api/doctors/delete/${doctorId}`, config);
-  
+
       if (response.status === 200) {
-        dispatch(deleteUserSuccess()); // Dispatch success if deletion is successful
+        dispatch(deleteUserSuccess());
         alert('Doctor account deleted successfully!');
-        navigate('/sign-in'); // Redirect to sign-in page after account deletion
+        navigate('/sign-in');
       } else {
         throw new Error('Failed to delete doctor account');
       }
     } catch (error) {
-      dispatch(deleteUserFailure(error)); // Dispatch failure action in case of error
-      console.error('Error deleting doctor account:', error); // Log error for debugging
+      dispatch(deleteUserFailure(error));
+      console.error('Error deleting doctor account:', error);
       alert('An error occurred while deleting the account.');
     }
   };
-  
-  
-  
-  
-  // Sign-out function
+
   const handleSignOut = async () => {
     try {
-      await axios.get('http://localhost:3000/api/auth/signout'); // Make a request to sign out
-      dispatch(signOut()); // Clear Redux state for user
-      navigate('/sign-in'); // Redirect to sign-in page after signing out
+      await axios.get('http://localhost:3000/api/auth/signout');
+      dispatch(signOut());
+      navigate('/sign-in');
     } catch (error) {
       console.error('Error signing out:', error);
     }
   };
 
   return (
-    <div className="flex h-full">
-      <Sidebar />
-      <div className="flex-1 p-8 ml-64">
-        <h1 className='text-3xl font-semibold text-center mb-7'>Doctor Profile</h1>
-        <form onSubmit={handleSubmit} className='flex flex-col gap-4 max-w-lg mx-auto'>
-          <input
-            type='file'
-            ref={fileRef}
-            hidden
-            accept='image/*'
-            onChange={(e) => setImage(e.target.files[0])}
-          />
-          <img
-            src={formData.profilePicture || currentUser.profilePicture}
-            alt='profile'
-            className='h-24 w-24 self-center cursor-pointer rounded-full object-cover'
-            onClick={() => fileRef.current.click()}
-          />
+    <div className="flex h-screen">
+      <div className=" w-64 h-full bg-gray-800 text-white fixed top-0 left-0 mt-20 overflow-y-auto z-0">
+        <h2 className="text-2xl font-bold p-4">Doctor Menu</h2>
+        <ul className="p-4">
+          <li className="mb-4">
+            <Link to="/doctor/appointments" className="hover:text-gray-300">Appointments</Link>
+          </li>
+          <li className="mb-4">
+            <Link to="/search-patients" className="hover:text-gray-300">Upload Report</Link>
+          </li>
+          <li className="mb-4">
+            <Link to="/view-reports-doctor" className="hover:text-gray-300">View Reports</Link>
+          </li>
+        </ul>
+      </div>
 
-          <p className='text-sm self-center'>
-            {imageError ? (
-              <span className='text-red-700'>
-                Error uploading image (file size must be less than 2 MB)
-              </span>
-            ) : imagePercent > 0 && imagePercent < 100 ? (
-              <span className='text-slate-700'>{`Uploading: ${imagePercent} %`}</span>
-            ) : imagePercent === 100 ? (
-              <span className='text-green-700'>Image uploaded successfully</span>
-            ) : (
-              ''
-            )}
-          </p>
+      <div className="flex-1 p-4 ml-64 lg:ml-0 transition-all overflow-y-scroll mb-20">
+        <div className="mt-4">
+          <h1 className='text-3xl font-semibold text-center mb-7'>Doctor Profile</h1>
+          <form onSubmit={handleSubmit} className='flex flex-col gap-4 max-w-lg mx-auto'>
+            <input
+              type='file'
+              ref={fileRef}
+              hidden
+              accept='image/*'
+              onChange={(e) => setImage(e.target.files[0])}
+            />
+            <img
+              src={formData.profilePicture || currentUser.profilePicture}
+              alt='profile'
+              className='h-24 w-24 self-center cursor-pointer rounded-full object-cover'
+              onClick={() => fileRef.current.click()}
+            />
 
-          <input
-            value={formData.name}
-            type='text'
-            id='name'
-            placeholder='Name'
-            className='bg-slate-100 rounded-lg p-3'
-            onChange={handleChange}
-          />
-          {errors.name && <p className="text-red-500">{errors.name}</p>}
+            <p className='text-sm self-center'>
+              {imageError ? (
+                <span className='text-red-700'>Error uploading image (file size must be less than 2 MB)</span>
+              ) : imagePercent > 0 && imagePercent < 100 ? (
+                <span className='text-slate-700'>Uploading: {imagePercent} %</span>
+              ) : imagePercent === 100 ? (
+                <span className='text-green-700'>Image uploaded successfully</span>
+              ) : (
+                ''
+              )}
+            </p>
 
-          <div>
-            <label className="block text-gray-600">Specialization</label>
-            <select
-              id="specialization"
-              value={formData.specialization}
+            <input
+              value={formData.name}
+              type='text'
+              id='name'
+              placeholder='Name'
+              className='bg-slate-100 rounded-lg p-3'
               onChange={handleChange}
-              required
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="" disabled>Select specialization</option>
-              {specializations.map((spec) => (
-                <option key={spec} value={spec}>{spec}</option>
+            />
+            {errors.name && <p className="text-red-500">{errors.name}</p>}
+
+            <div>
+              <label className="block text-gray-600">Specialization</label>
+              <select
+                id="specialization"
+                value={formData.specialization}
+                onChange={handleChange}
+                required
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="" disabled>Select specialization</option>
+                {specializations.map((spec) => (
+                  <option key={spec} value={spec}>{spec}</option>
+                ))}
+              </select>
+            </div>
+            {errors.specialization && <p className="text-red-500">{errors.specialization}</p>}
+
+            <input
+              value={formData.email}
+              type='email'
+              id='email'
+              placeholder='Email'
+              className='bg-slate-100 rounded-lg p-3'
+              onChange={handleChange}
+            />
+            {errors.email && <p className="text-red-500">{errors.email}</p>}
+
+            <input
+              value={formData.maxAppointmentsPerDay}
+              type='number'
+              id='maxAppointmentsPerDay'
+              placeholder='Max Appointments Per Day'
+              className='bg-slate-100 rounded-lg p-3'
+              onChange={handleChange}
+            />
+            {errors.maxAppointmentsPerDay && <p className="text-red-500">{errors.maxAppointmentsPerDay}</p>}
+
+            <input
+              value={formData.channelingCost}
+              type='number'
+              id='channelingCost'
+              placeholder='Channeling Cost'
+              className='bg-slate-100 rounded-lg p-3'
+              onChange={handleChange}
+            />
+            {errors.channelingCost && <p className="text-red-500">{errors.channelingCost}</p>}
+
+            <div className="grid grid-cols-2 gap-4">
+              {daysOfWeek.map((day) => (
+                <label key={day} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formData.availableDates.includes(day)}
+                    onChange={() => handleDateToggle(day)}
+                    className="mr-2"
+                  />
+                  {day}
+                </label>
               ))}
-            </select>
-          </div>
-          {errors.specialization && <p className="text-red-500">{errors.specialization}</p>}
+            </div>
 
-          <input
-            value={formData.email}
-            type='email'
-            id='email'
-            placeholder='Email'
-            className='bg-slate-100 rounded-lg p-3'
-            onChange={handleChange}
-          />
-          {errors.email && <p className="text-red-500">{errors.email}</p>}
-
-          <input
-            value={formData.maxAppointmentsPerDay}
-            type='number'
-            id='maxAppointmentsPerDay'
-            placeholder='Max Appointments Per Day'
-            className='bg-slate-100 rounded-lg p-3'
-            onChange={handleChange}
-          />
-          {errors.maxAppointmentsPerDay && <p className="text-red-500">{errors.maxAppointmentsPerDay}</p>}
-
-          <input
-            value={formData.channelingCost}
-            type='number'
-            id='channelingCost'
-            placeholder='Channeling Cost'
-            className='bg-slate-100 rounded-lg p-3'
-            onChange={handleChange}
-          />
-          {errors.channelingCost && <p className="text-red-500">{errors.channelingCost}</p>}
-
-          <div className="grid grid-cols-2 gap-4">
-            {daysOfWeek.map((day) => (
-              <label key={day} className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={formData.availableDates.includes(day)}
-                  onChange={() => handleDateToggle(day)}
-                  className="mr-2"
-                />
-                {day}
-              </label>
-            ))}
-          </div>
-
-          {formData.availableDates.map((day) => (
-            <div key={day} className="mt-4 border border-gray-300 p-4 rounded-md">
-              <h3 className="text-lg font-semibold">{day}</h3>
-              <div className="flex items-center justify-between">
-                <div className="flex flex-col">
-                  <label className="block text-gray-600">From</label>
-                  <input
-                    type="time"
-                    value={formData.timeRanges[day]?.from || ''}
-                    onChange={(e) => handleTimeRangeChange(day, 'from', e.target.value)}
-                    className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="block text-gray-600">To</label>
-                  <input
-                    type="time"
-                    value={formData.timeRanges[day]?.to || ''}
-                    onChange={(e) => handleTimeRangeChange(day, 'to', e.target.value)}
-                    className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+            {formData.availableDates.map((day) => (
+              <div key={day} className="mt-4 border border-gray-300 p-4 rounded-md">
+                <h3 className="text-lg font-semibold">{day}</h3>
+                <div className="flex items-center justify-between">
+                  <div className="flex flex-col">
+                    <label className="block text-gray-600">From</label>
+                    <input
+                      type="time"
+                      value={formData.timeRanges[day]?.from || ''}
+                      onChange={(e) => handleTimeRangeChange(day, 'from', e.target.value)}
+                      className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <label className="block text-gray-600">To</label>
+                    <input
+                      type="time"
+                      value={formData.timeRanges[day]?.to || ''}
+                      onChange={(e) => handleTimeRangeChange(day, 'to', e.target.value)}
+                      className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
 
-          <button className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>
-            Update Profile
-          </button>
-        </form>
+            <button className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>
+              Update Profile
+            </button>
+          </form>
 
-        <div className='flex justify-between max-w-lg mx-auto mt-5'>
-          <span
-            onClick={handleDeleteAccount}
-            className='text-red-700 cursor-pointer'
-          >
-            Delete Account
-          </span>
-          <span
-            onClick={handleSignOut}
-            className='text-red-700 cursor-pointer'
-          >
-            Sign Out
-          </span>
+          <div className='flex justify-between max-w-lg mx-auto mt-5'>
+            <span onClick={handleDeleteAccount} className='text-red-700 cursor-pointer'>
+              Delete Account
+            </span>
+            <span onClick={handleSignOut} className='text-red-700 cursor-pointer'>
+              Sign Out
+            </span>
+          </div>
+
+          <p className='text-red-700 text-center mt-5'>{errors.error && 'Something went wrong!'}</p>
+          <p className='text-green-700 text-center mt-5'>
+            {updateSuccess && 'Profile updated successfully!'}
+          </p>
         </div>
-
-        <p className='text-red-700 text-center mt-5'>{errors.error && 'Something went wrong!'}</p>
-        <p className='text-green-700 text-center mt-5'>
-          {updateSuccess && 'Profile updated successfully!'}
-        </p>
       </div>
     </div>
   );

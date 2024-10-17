@@ -49,7 +49,7 @@ export default function DoctorList() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-5">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl">
+      <div className="bg-white shadow- rounded-lg p-8 w-full max-w-7xl mb-72">
         <h1 className="text-2xl font-bold text-center text-gray-700 mb-6">Doctors List</h1>
         <button
           onClick={generateReport}
@@ -76,7 +76,7 @@ export default function DoctorList() {
             ) : (
               doctors.map(doctor => (
                 <tr key={doctor._id} className="hover:bg-gray-100">
-                  <td className="py-3 px-4 border-b border-gray-300">{doctor.name}</td>
+                  <td className="py-3 px-4 border-b border-gray-300">Dr. {doctor.name}</td>
                   <td className="py-3 px-4 border-b border-gray-300">{doctor.specialization}</td>
                   <td className="py-3 px-4 border-b border-gray-300">{doctor.email}</td>
                   <td className="py-3 px-4 border-b border-gray-300">{doctor.channelingCost}</td>
