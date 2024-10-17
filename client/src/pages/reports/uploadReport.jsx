@@ -11,21 +11,18 @@ const UploadReportForm = () => {
     const [testType, setTestType] = useState('');
     const [reportIssuedDate, setReportIssuedDate] = useState('');
     const [reportFile, setReportFile] = useState(null);
-    const [successMessage, setSuccessMessage] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
 
-    // Handle form submission
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         const formData = new FormData();
         formData.append('patientId', patientId);
         formData.append('reportType', reportType);
         formData.append('testType', testType);
         formData.append('reportIssuedDate', reportIssuedDate);
         formData.append('reportFile', reportFile);
-    
+
         try {
             const res = await axios.post('/api/reports/upload', formData, {
                 headers: {
@@ -33,21 +30,20 @@ const UploadReportForm = () => {
                 },
                 withCredentials: true,
             });
-    
+
             if (res.data.success) {
-                setSuccessMessage('Your report has been submitted successfully.');
+                // Show success alert and navigate after 3 seconds
+                alert('Your report has been submitted successfully.');
                 setTimeout(() => {
                     navigate('/ViewReports'); // Redirect after success
                 }, 3000);
             }
         } catch (err) {
             console.error('Error during form submission:', err); // Log the full error object
-            console.log('Error response data:', err.response?.data); // Log error response data for better visibility
-            setErrorMessage('There was an error submitting your report. Please try again.');
+            // Show error alert
+            alert('There was an error submitting your report. Please try again.');
         }
     };
-    
-
 
     // Render test type options based on selected report type
     const renderTestTypes = () => {
@@ -222,10 +218,6 @@ const UploadReportForm = () => {
                         className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
-
-                {/* Success/Error Message */}
-                {successMessage && <p className="text-green-600">{successMessage}</p>}
-                {errorMessage && <p className="text-red-600">{errorMessage}</p>}
 
                 {/* Submit Button */}
                 <button

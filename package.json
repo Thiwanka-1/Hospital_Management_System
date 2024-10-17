@@ -1,7 +1,6 @@
 {
-  "name": "EduCode",
+  "name": "educode",
   "version": "1.0.0",
-  "description": "",
   "type": "module",
   "main": "index.js",
   "scripts": {
@@ -22,6 +21,8 @@
     "mongoose": "^8.5.3",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^3.1.4",
-    "pdfkit": "^0.15.0"
-  }
+    "pdfkit": "^0.15.0",
+    "react-toastify": "^10.0.6"
+  },
+  "description": ""
 }
