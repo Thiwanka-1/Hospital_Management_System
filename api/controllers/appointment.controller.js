@@ -183,12 +183,28 @@ export const getDoctorAppointments = async (req, res) => {
         // Define a query object for Mongoose
         let query = { doctorId };
 
-        // If a date is provided, filter appointments by that date
+        // Helper function to get the start of the current week (Monday)
+        const getWeekStart = (date) => {
+            const currentDate = new Date(date);
+            const dayOfWeek = currentDate.getDay();
+            const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Handle Sunday as day 0
+            const weekStart = new Date(currentDate.setDate(currentDate.getDate() + mondayOffset));
+            weekStart.setHours(0, 0, 0, 0); // Set time to midnight
+            return weekStart;
+        };
+
         if (date) {
+            // If a specific date is provided, filter appointments by that date
             const selectedDate = new Date(date);
             query.date = {
                 $gte: selectedDate.setHours(0, 0, 0, 0), // Start of the day
                 $lt: selectedDate.setHours(23, 59, 59, 999), // End of the day
+            };
+        } else {
+            // If no specific date, fetch appointments for this week and future dates
+            const weekStart = getWeekStart(new Date());
+            query.date = {
+                $gte: weekStart // Start of the current week
             };
         }
 
@@ -200,5 +216,7 @@ export const getDoctorAppointments = async (req, res) => {
         res.status(500).json({ message: 'Error fetching appointments' });
     }
 };
+
+
 
 

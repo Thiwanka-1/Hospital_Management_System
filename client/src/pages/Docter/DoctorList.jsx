@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import logo from '../../components/logo.png'; // Import your logo
+
 
 export default function DoctorList() {
   const [doctors, setDoctors] = useState([]);
@@ -28,24 +30,46 @@ export default function DoctorList() {
 
   const generateReport = () => {
     const doc = new jsPDF();
+
+    // Add logo to the header (ensure your logo is properly imported)
+    doc.addImage(logo, 'PNG', 10, 10, 30, 30);
+
+    // Add title and some information
+    doc.setFontSize(18);
+    doc.text('MediZen Doctors Report', 50, 20); // Adjusted title
+    doc.setFontSize(12);
+    doc.text('Generated on: ' + new Date().toLocaleDateString(), 50, 30);
+    doc.text('Total Doctors: ' + doctors.length, 50, 35);
+    doc.text('MediZen - Empowering Your Health.', 50, 40);
+
+    // Add table data
     const tableColumn = ["Name", "Specialization", "Email", "Channeling Cost", "Available Days"];
     const tableRows = [];
 
     doctors.forEach(doctor => {
-      const doctorData = [
-        doctor.name,
-        doctor.specialization,
-        doctor.email,
-        doctor.channelingCost,
-        doctor.availableDates.join(', ')
-      ];
-      tableRows.push(doctorData);
+        const doctorData = [
+            doctor.name,
+            doctor.specialization,
+            doctor.email,
+            doctor.channelingCost,
+            doctor.availableDates.join(', ')
+        ];
+        tableRows.push(doctorData);
     });
 
-    doc.autoTable(tableColumn, tableRows, { startY: 20 });
-    doc.text("Doctors Report", 14, 15);
+    // Add the table below the header
+    doc.autoTable({
+        startY: 50, // Position the table below the header
+        head: [tableColumn],
+        body: tableRows,
+        theme: 'grid', // Professional look with grid lines
+        styles: { fontSize: 10, cellPadding: 4 },
+    });
+
+    // Save the generated PDF
     doc.save("doctors_report.pdf");
-  };
+};
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-5">

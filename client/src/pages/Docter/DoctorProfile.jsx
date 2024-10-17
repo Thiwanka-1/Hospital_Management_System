@@ -121,8 +121,25 @@ export default function DoctorProfile() {
 
   const handleChange = (e) => {
     const { id, value } = e.target;
+
+    // Restrict inputs based on the field
+    if (id === "name") {
+        // Allow only letters (A-Z, a-z) and spaces
+        const letterRegex = /^[A-Za-z\s]*$/;
+        if (!letterRegex.test(value)) {
+            return; // Do nothing if non-letters are entered
+        }
+    } else if (id === "maxAppointmentsPerDay" || id === "channelingCost") {
+        // Allow only numbers
+        const numberRegex = /^[0-9]*$/;
+        if (!numberRegex.test(value)) {
+            return; // Do nothing if non-numeric characters are entered
+        }
+    }
+
     setFormData({ ...formData, [id]: value });
-  };
+};
+
 
   const handleDateToggle = (day) => {
     setFormData(prevState => ({
@@ -261,7 +278,10 @@ export default function DoctorProfile() {
               placeholder='Name'
               className='bg-slate-100 rounded-lg p-3'
               onChange={handleChange}
-            />
+              pattern="[A-Za-z\s]*" // Enforce letters-only pattern
+              title="Only letters are allowed" // Tooltip when invalid input is entered
+          />
+
             {errors.name && <p className="text-red-500">{errors.name}</p>}
 
             <div>
@@ -293,22 +313,24 @@ export default function DoctorProfile() {
 
             <input
               value={formData.maxAppointmentsPerDay}
-              type='number'
+              type='text' // Set as 'text' to allow input handling, but restricted to numbers via `handleChange`
               id='maxAppointmentsPerDay'
               placeholder='Max Appointments Per Day'
               className='bg-slate-100 rounded-lg p-3'
               onChange={handleChange}
+              inputMode="numeric" // Soft keyboard on mobile devices will show numbers
             />
             {errors.maxAppointmentsPerDay && <p className="text-red-500">{errors.maxAppointmentsPerDay}</p>}
 
             <input
               value={formData.channelingCost}
-              type='number'
+              type='text' // Set as 'text' to allow input handling, but restricted to numbers via `handleChange`
               id='channelingCost'
               placeholder='Channeling Cost'
               className='bg-slate-100 rounded-lg p-3'
               onChange={handleChange}
-            />
+              inputMode="numeric" // Soft keyboard on mobile devices will show numbers
+          />
             {errors.channelingCost && <p className="text-red-500">{errors.channelingCost}</p>}
 
             <div className="grid grid-cols-2 gap-4">

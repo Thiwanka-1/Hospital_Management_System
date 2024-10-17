@@ -51,23 +51,43 @@ export default function Profile() {
   const validate = () => {
     const newErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const nameRegex = /^[A-Za-z\s]*$/; // Allow only letters and spaces
 
+    if (formData.name && (!nameRegex.test(formData.name) || formData.name.trim() === '')) {
+        newErrors.name = 'Name should contain only letters and cannot be empty';
+    }
     if (formData.username && formData.username.length < 8) {
-      newErrors.username = 'Username must be at least 8 characters long';
+        newErrors.username = 'Username must be at least 8 characters long';
     }
     if (formData.email && !emailRegex.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+        newErrors.email = 'Please enter a valid email';
     }
     if (formData.password && formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters long';
+        newErrors.password = 'Password must be at least 8 characters long';
     }
 
     return newErrors;
-  };
+};
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
-  };
+
+const handleChange = (e) => {
+  const { id, value } = e.target;
+
+  // Restrict inputs based on the field
+  if (id === "name") {
+      // Allow only letters (A-Z, a-z) and spaces
+      const letterRegex = /^[A-Za-z\s]*$/;
+      if (!letterRegex.test(value)) {
+          return; // Do nothing if non-letters are entered
+      }
+  } else if (id === "username") {
+      // Any additional restrictions for username
+  }
+
+  setFormData({ ...formData, [id]: value });
+};
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -161,14 +181,23 @@ export default function Profile() {
             )}
           </p>
           <input
-            defaultValue={currentUser.name} // Use current user's name
-            type='text'
-            id='name'
-            placeholder='Name'
-            className='bg-slate-100 rounded-lg p-3'
-            onChange={handleChange}
+              defaultValue={currentUser.name}
+              type='text'
+              id='name'
+              placeholder='Name'
+              className='bg-slate-100 rounded-lg p-3'
+              onChange={handleChange}
+              onKeyDown={(e) => {
+                  const regex = /^[A-Za-z\s]*$/;
+                  if (!regex.test(e.key) && e.key !== "Backspace" && e.key !== "Tab" && e.key !== "Delete" && e.key !== "ArrowLeft" && e.key !== "ArrowRight") {
+                      e.preventDefault();
+                  }
+              }}
+              pattern="[A-Za-z\s]*"
+              title="Only letters and spaces are allowed"
           />
-           {errors.name && <p className="text-red-500">{errors.name}</p>}
+          {errors.name && <p className="text-red-500">{errors.name}</p>}
+
 
           <input
             defaultValue={currentUser.username}

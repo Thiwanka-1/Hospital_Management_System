@@ -39,10 +39,30 @@ export default function DoctorForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({}); // State for field-specific errors
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(''); // Reset error message
+
+    // Validation
+    const errors = {};
+    const nameRegex = /^[A-Za-z\s]*$/; // Only letters and spaces
+    if (!nameRegex.test(name) || name.trim() === '') {
+      errors.name = 'Name should contain only letters and cannot be empty';
+    }
+    if (maxAppointmentsPerDay <= 0) {
+      errors.maxAppointmentsPerDay = 'Max appointments must be a positive number';
+    }
+    if (channelingCost < 0) {
+      errors.channelingCost = 'Channeling cost must be a non-negative number';
+    }
+
+    // If there are validation errors, show them and prevent submission
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      return;
+    }
 
     // Prepare timeRanges based on selected availableDates and their time input
     const formattedTimeRanges = availableDates.map((day) => ({
@@ -79,6 +99,31 @@ export default function DoctorForm() {
     }
   };
 
+  const handleNameChange = (e) => {
+    const value = e.target.value;
+    const nameRegex = /^[A-Za-z\s]*$/; // Allow only letters and spaces
+    if (nameRegex.test(value)) {
+      setName(value);
+      setFieldErrors((prevErrors) => ({ ...prevErrors, name: '' })); // Clear errors if input is valid
+    }
+  };
+
+  const handleMaxAppointmentsChange = (e) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) { // Allow only numbers
+      setMaxAppointmentsPerDay(Number(value));
+      setFieldErrors((prevErrors) => ({ ...prevErrors, maxAppointmentsPerDay: '' }));
+    }
+  };
+
+  const handleChannelingCostChange = (e) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) { // Allow only numbers
+      setChannelingCost(Number(value));
+      setFieldErrors((prevErrors) => ({ ...prevErrors, channelingCost: '' }));
+    }
+  };
+
   const handleDateToggle = (day) => {
     setAvailableDates(prevState => {
       if (prevState.includes(day)) {
@@ -111,10 +156,16 @@ export default function DoctorForm() {
               type="text"
               placeholder="Enter doctor's name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={handleNameChange}
+              onKeyDown={(e) => {
+                if (!/^[A-Za-z\s]*$/.test(e.key) && e.key !== "Backspace" && e.key !== "Tab" && e.key !== "Delete" && e.key !== "ArrowLeft" && e.key !== "ArrowRight") {
+                  e.preventDefault();
+                }
+              }}
               required
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            {fieldErrors.name && <p className="text-red-600">{fieldErrors.name}</p>}
           </div>
 
           <div>
@@ -183,10 +234,11 @@ export default function DoctorForm() {
               type="number"
               placeholder="Enter max appointments"
               value={maxAppointmentsPerDay}
-              onChange={(e) => setMaxAppointmentsPerDay(e.target.value)}
+              onChange={handleMaxAppointmentsChange}
               required
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            {fieldErrors.maxAppointmentsPerDay && <p className="text-red-600">{fieldErrors.maxAppointmentsPerDay}</p>}
           </div>
 
           <div>
@@ -195,10 +247,11 @@ export default function DoctorForm() {
               type="number"
               placeholder="Enter channeling cost"
               value={channelingCost}
-              onChange={(e) => setChannelingCost(e.target.value)}
+              onChange={handleChannelingCostChange}
               required
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            {fieldErrors.channelingCost && <p className="text-red-600">{fieldErrors.channelingCost}</p>}
           </div>
 
           <div>

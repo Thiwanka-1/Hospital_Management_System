@@ -80,7 +80,7 @@ export default function ManageUsers() {
       const userData = [
         user.username,
         user.email,
-        user.isAdmin ? 'Admin' : 'User',
+        user.isAdmin ? 'Admin' : 'Patient',
       ];
       tableRows.push(userData);
     });
