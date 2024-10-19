@@ -4,7 +4,9 @@ import {
   getReports, 
   updateReport, 
   deleteReport, 
-  getReportsByDoctor
+  getReportsByDoctor,
+  getReportById,
+  getReportsForPatient
 } from '../controllers/report.controller.js';
 import { verifyToken, verifyDoctor } from '../utils/verifyUser.js'; // Assume verifyDoctor checks if the user is a doctor
 import multer from 'multer'; // Middleware for handling file uploads
@@ -54,5 +56,11 @@ router.delete('/:reportId', verifyToken, verifyDoctor, deleteReport);
 
 // GET: Doctor gets their own uploaded reports
 router.get('/doctor', verifyToken, verifyDoctor, getReportsByDoctor);
+
+// Add this route in report.route.js to fetch a single report by ID
+router.get('/:reportId', verifyToken, getReportById);
+
+// Add this line for patient reports
+router.get('/patient', verifyToken, getReportsForPatient); 
 
 export default router;

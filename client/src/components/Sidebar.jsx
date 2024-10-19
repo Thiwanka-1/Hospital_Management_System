@@ -80,7 +80,7 @@ export default function Sidebar() {
               </Link>
             </li>
             <li className="mb-4">
-              <Link to="/appointments/my" className="hover:text-gray-300">
+              <Link to="/view-reports-patient" className="hover:text-gray-300">
                 Lab Reports
               </Link>
             </li>

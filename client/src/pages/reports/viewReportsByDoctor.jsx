@@ -29,9 +29,12 @@ const ViewReportsByDoctor = () => {
     // Function to handle deleting a report
     const handleDelete = async (reportId) => {
         try {
-            await axios.delete(`/api/reports/${reportId}`, { withCredentials: true });
-            // Remove the deleted report from the state
-            setReports(reports.filter((report) => report._id !== reportId));
+            const response = await axios.delete(`/api/reports/${reportId}`, { withCredentials: true });
+            if (response.status === 200) {
+                // Remove the deleted report from the state
+                setReports(reports.filter((report) => report._id !== reportId));
+                alert('Report deleted successfully');
+            }
         } catch (error) {
             console.error('Error deleting report:', error);
             setErrorMessage('Failed to delete the report. Please try again later.');
@@ -39,60 +42,64 @@ const ViewReportsByDoctor = () => {
     };
 
     return (
-        <div className="container mx-auto p-6">
-            <h2 className="text-2xl font-bold text-center mb-6">My Uploaded Reports</h2>
+        <div className="container mx-auto p-6 bg-gray-50 rounded-lg shadow-lg">
+            <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">My Uploaded Reports</h2>
 
-            {errorMessage && <p className="text-red-600 text-center">{errorMessage}</p>}
+            {errorMessage && (
+                <p className="text-red-600 text-center mb-4">{errorMessage}</p>
+            )}
 
             {reports.length > 0 ? (
-                <table className="table-auto w-full">
-                    <thead>
-                        <tr>
-                            <th className="px-4 py-2">Patient Name</th>
-                            <th className="px-4 py-2">Report Type</th>
-                            <th className="px-4 py-2">Test Type</th>
-                            <th className="px-4 py-2">Issue Date</th>
-                            <th className="px-4 py-2">View Report</th>
-                            <th className="px-4 py-2">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {reports.map((report) => (
-                            <tr key={report._id}>
-                                <td className="border px-4 py-2">{report.patient?.name || 'N/A'}</td>
-                                <td className="border px-4 py-2">{report.reportType}</td>
-                                <td className="border px-4 py-2">{report.testType}</td>
-                                <td className="border px-4 py-2">{new Date(report.reportIssuedDate).toLocaleDateString()}</td>
-                                <td className="border px-4 py-2">
-                                    <a
-                                        href={`http://localhost:3000/reports/${encodeURIComponent(report.reportFile.split('/').pop())}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-blue-600 hover:underline"
-                                    >
-                                        View Report
-                                    </a>
-                                </td>
-                                <td className="border px-4 py-2">
-                                    <button
-                                        onClick={() => handleUpdate(report._id)}
-                                        className="bg-yellow-500 text-white px-2 py-1 mr-2 rounded hover:bg-yellow-600"
-                                    >
-                                        Update
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(report._id)}
-                                        className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
-                                    >
-                                        Delete
-                                    </button>
-                                </td>
+                <div className="overflow-x-auto">
+                    <table className="table-auto w-full bg-white shadow-md rounded-lg">
+                        <thead>
+                            <tr className="bg-gray-200 text-gray-700">
+                                <th className="px-6 py-3 text-left font-semibold">Patient Name</th>
+                                <th className="px-6 py-3 text-left font-semibold">Report Type</th>
+                                <th className="px-6 py-3 text-left font-semibold">Test Type</th>
+                                <th className="px-6 py-3 text-left font-semibold">Issue Date</th>
+                                <th className="px-6 py-3 text-left font-semibold">View Report</th>
+                                <th className="px-6 py-3 text-left font-semibold">Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {reports.map((report) => (
+                                <tr key={report._id} className="hover:bg-gray-100">
+                                    <td className="border-t px-6 py-4">{report.patient?.name || 'N/A'}</td>
+                                    <td className="border-t px-6 py-4">{report.reportType}</td>
+                                    <td className="border-t px-6 py-4">{report.testType}</td>
+                                    <td className="border-t px-6 py-4">{new Date(report.reportIssuedDate).toLocaleDateString()}</td>
+                                    <td className="border-t px-6 py-4">
+                                        <a
+                                            href={`http://localhost:3000/reports/${encodeURIComponent(report.reportFile.split('/').pop())}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-600 hover:text-blue-800 hover:underline"
+                                        >
+                                            View Report
+                                        </a>
+                                    </td>
+                                    <td className="border-t px-6 py-4">
+                                        <button
+                                            onClick={() => handleUpdate(report._id)}
+                                            className="bg-yellow-500 text-white px-3 py-1 mr-2 rounded hover:bg-yellow-600 transition-colors"
+                                        >
+                                            Update
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(report._id)}
+                                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition-colors"
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             ) : (
-                <p className="text-center">No reports found.</p>
+                <p className="text-center text-gray-600 mt-6">No reports found.</p>
             )}
         </div>
     );

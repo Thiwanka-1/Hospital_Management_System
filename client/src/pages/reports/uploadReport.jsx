@@ -11,6 +11,8 @@ const UploadReportForm = () => {
     const [testType, setTestType] = useState('');
     const [reportIssuedDate, setReportIssuedDate] = useState('');
     const [reportFile, setReportFile] = useState(null);
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     // Handle form submission
     const handleSubmit = async (e) => {
@@ -32,16 +34,25 @@ const UploadReportForm = () => {
             });
 
             if (res.data.success) {
-                // Show success alert and navigate after 3 seconds
-                alert('Your report has been submitted successfully.');
+                // Show success message and clear form fields
+                setSuccessMessage('Your report has been submitted successfully.');
+                setReportType('');
+                setTestType('');
+                setReportIssuedDate('');
+                setReportFile(null);
+                setErrorMessage('');
+
+                // Navigate after 3 seconds (if desired)
                 setTimeout(() => {
-                    navigate('/ViewReports'); // Redirect after success
+                    setSuccessMessage('');
+                    navigate('/view-reports-doctor');
                 }, 3000);
             }
         } catch (err) {
-            console.error('Error during form submission:', err); // Log the full error object
-            // Show error alert
-            alert('There was an error submitting your report. Please try again.');
+            console.error('Error during form submission:', err);
+            // Show error message
+            setErrorMessage('There was an error submitting your report. Please try again.');
+            setSuccessMessage('');
         }
     };
 
@@ -51,7 +62,7 @@ const UploadReportForm = () => {
             case 'Lab Report':
                 return (
                     <>
-                        <label>
+                        <label className="flex items-center">
                             <input
                                 type="radio"
                                 name="testType"
@@ -61,7 +72,7 @@ const UploadReportForm = () => {
                             />
                             Blood Count
                         </label>
-                        <label>
+                        <label className="flex items-center">
                             <input
                                 type="radio"
                                 name="testType"
@@ -71,7 +82,7 @@ const UploadReportForm = () => {
                             />
                             Urin Test
                         </label>
-                        <label>
+                        <label className="flex items-center">
                             <input
                                 type="radio"
                                 name="testType"
@@ -86,7 +97,7 @@ const UploadReportForm = () => {
             case 'Radiology Report':
                 return (
                     <>
-                        <label>
+                        <label className="flex items-center">
                             <input
                                 type="radio"
                                 name="testType"
@@ -96,7 +107,7 @@ const UploadReportForm = () => {
                             />
                             X-Ray
                         </label>
-                        <label>
+                        <label className="flex items-center">
                             <input
                                 type="radio"
                                 name="testType"
@@ -106,7 +117,7 @@ const UploadReportForm = () => {
                             />
                             MRI
                         </label>
-                        <label>
+                        <label className="flex items-center">
                             <input
                                 type="radio"
                                 name="testType"
@@ -121,7 +132,7 @@ const UploadReportForm = () => {
             case 'Pathology Report':
                 return (
                     <>
-                        <label>
+                        <label className="flex items-center">
                             <input
                                 type="radio"
                                 name="testType"
@@ -131,7 +142,7 @@ const UploadReportForm = () => {
                             />
                             Anatomical Pathology
                         </label>
-                        <label>
+                        <label className="flex items-center">
                             <input
                                 type="radio"
                                 name="testType"
@@ -141,7 +152,7 @@ const UploadReportForm = () => {
                             />
                             Clinical Pathology
                         </label>
-                        <label>
+                        <label className="flex items-center">
                             <input
                                 type="radio"
                                 name="testType"
@@ -159,8 +170,12 @@ const UploadReportForm = () => {
     };
 
     return (
-        <div className="container mx-auto p-6">
-            <h2 className="text-2xl font-bold text-center mb-6">Upload Medical Records</h2>
+        <div className="container mx-auto p-6 bg-gray-50 rounded-lg shadow-lg">
+            <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">Upload Medical Records</h2>
+
+            {/* Success and Error Messages */}
+            {successMessage && <p className="text-green-600 text-center mb-4">{successMessage}</p>}
+            {errorMessage && <p className="text-red-600 text-center mb-4">{errorMessage}</p>}
 
             <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg space-y-6">
                 {/* Patient Name (read-only) */}
@@ -170,7 +185,7 @@ const UploadReportForm = () => {
                         type="text"
                         value={userName}
                         readOnly
-                        className="w-full p-2 border border-gray-300 rounded-md bg-gray-100"
+                        className="w-full p-3 border border-gray-300 rounded-md bg-gray-100 text-gray-600"
                     />
                 </div>
 
@@ -180,7 +195,7 @@ const UploadReportForm = () => {
                     <select
                         value={reportType}
                         onChange={(e) => setReportType(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <option value="">Select Report Type</option>
                         <option value="Lab Report">Lab Report</option>
@@ -192,7 +207,7 @@ const UploadReportForm = () => {
                 {/* Test Type Radio Buttons */}
                 <div>
                     <label className="block text-gray-700 text-sm font-bold mb-2">Test Type</label>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-4">
                         {renderTestTypes()}
                     </div>
                 </div>
@@ -204,7 +219,7 @@ const UploadReportForm = () => {
                         type="date"
                         value={reportIssuedDate}
                         onChange={(e) => setReportIssuedDate(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
 
@@ -215,14 +230,14 @@ const UploadReportForm = () => {
                         type="file"
                         accept=".pdf, image/*" // Accept only PDFs and images
                         onChange={(e) => setReportFile(e.target.files[0])}
-                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
 
                 {/* Submit Button */}
                 <button
                     type="submit"
-                    className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out"
+                    className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out"
                 >
                     Submit
                 </button>

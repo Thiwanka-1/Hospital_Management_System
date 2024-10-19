@@ -3,13 +3,17 @@ import User from "../models/user.model.js"; // Ensure User model is imported
 import nodemailer from "nodemailer";
 import { errorHandler } from "../utils/error.js";
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "sachinthaakarawita@gmail.com",
-    pass: "qzir naio drrq tnvk",
-  },
-});
+// Initialize transporter only if not in test environment
+let transporter;
+if (process.env.NODE_ENV !== "test") {
+  transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "sachinthaakarawita@gmail.com",
+      pass: "qzir naio drrq tnvk",
+    },
+  });
+}
 
 export const addTreatment = async (req, res, next) => {
   const { treatmentName, patientId, prescribedDate, doctorName, description } =
@@ -38,7 +42,7 @@ export const addTreatment = async (req, res, next) => {
 
     // Fetch the patient's email
     const patient = await User.findById(patientId);
-    if (patient && patient.email) {
+    if (process.env.NODE_ENV !== "test" && patient && patient.email) {
       // Send an email notification
       const mailOptions = {
         from: "sachinthaakarawita@gmail.com", // Update to match the user in transporter

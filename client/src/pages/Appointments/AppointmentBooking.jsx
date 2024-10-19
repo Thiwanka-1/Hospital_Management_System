@@ -199,7 +199,7 @@ const AppointmentBooking = () => {
                             <p className="text-gray-700"><strong>Doctor:</strong> {appointmentDetails.doctorName}</p>
                             <p className="text-gray-700"><strong>Date:</strong> {new Date(appointmentDetails.date).toLocaleDateString()}</p>
                             <p className="text-gray-700"><strong>Appointment Number:</strong> {appointmentDetails.appointmentNumber}</p>
-                            <p className="text-gray-700"><strong>Channeling Cost:</strong> ${appointmentDetails.channelingCost}</p>
+                            <p className="text-gray-700"><strong>Channeling Cost:</strong> Rs. {appointmentDetails.channelingCost}</p>
                             <p className="text-gray-700"><strong>Time:</strong> {appointmentDetails.time}</p>
                         </div>
                         <div className="mt-6 text-center">

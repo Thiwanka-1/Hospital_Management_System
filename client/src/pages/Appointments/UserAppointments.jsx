@@ -72,7 +72,7 @@ const UserAppointments = () => {
                                 <tr key={appointment._id} className="hover:bg-gray-50">
                                     <td className="py-4 px-14">{appointment.appointmentNumber}</td>
                                     <td className="py-4 px-6">{appointment.patientName}</td>
-                                    <td className="py-4 px-6">{appointment.doctorId ? appointment.doctorId.name : 'Unknown Doctor'}</td>
+                                    <td className="py-4 px-6">Dr. {appointment.doctorId ? appointment.doctorId.name : 'Unknown Doctor'}</td>
                                     <td className="py-4 px-6">{appointment.doctorId ? appointment.doctorId.specialization : 'N/A'}</td>
                                     <td className="py-4 px-6">{new Date(appointment.date).toLocaleDateString()}</td>
                                     <td className="py-4 px-6">

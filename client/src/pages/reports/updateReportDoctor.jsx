@@ -11,6 +11,7 @@ const UpdateReportForm = () => {
     const [testType, setTestType] = useState('');
     const [reportIssuedDate, setReportIssuedDate] = useState('');
     const [reportFile, setReportFile] = useState(null);
+    const [isLoading, setIsLoading] = useState(true); // Add loading state
 
     // Fetch the existing report details
     useEffect(() => {
@@ -18,13 +19,17 @@ const UpdateReportForm = () => {
             try {
                 const res = await axios.get(`/api/reports/${reportId}`, { withCredentials: true });
                 const report = res.data;
+
+                // Set fetched data to state
                 setUserName(report.patient.name);
                 setReportType(report.reportType);
                 setTestType(report.testType);
                 setReportIssuedDate(report.reportIssuedDate.slice(0, 10)); // Format date for input field
+                setIsLoading(false); // Set loading to false once data is fetched
             } catch (err) {
                 console.error('Error fetching report details:', err);
                 alert('Failed to load report details. Please try again.');
+                setIsLoading(false);
             }
         };
 
@@ -34,6 +39,12 @@ const UpdateReportForm = () => {
     // Handle form submission for updating the report
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validation for required fields
+        if (!reportType || !testType || !reportIssuedDate) {
+            alert('Please fill in all required fields.');
+            return;
+        }
 
         const formData = new FormData();
         formData.append('reportType', reportType);
@@ -61,6 +72,8 @@ const UpdateReportForm = () => {
 
     // Render test type options based on selected report type
     const renderTestTypes = () => {
+        if (!reportType) return null; // Return null if report type is not set
+
         switch (reportType) {
             case 'Lab Report':
                 return (
@@ -73,6 +86,7 @@ const UpdateReportForm = () => {
                                 checked={testType === 'Blood Count'}
                                 onChange={(e) => setTestType(e.target.value)}
                                 className="mr-2"
+                                required
                             />
                             Blood Count
                         </label>
@@ -84,6 +98,7 @@ const UpdateReportForm = () => {
                                 checked={testType === 'Urin Test'}
                                 onChange={(e) => setTestType(e.target.value)}
                                 className="mr-2"
+                                required
                             />
                             Urin Test
                         </label>
@@ -95,6 +110,7 @@ const UpdateReportForm = () => {
                                 checked={testType === 'Tumor Markers'}
                                 onChange={(e) => setTestType(e.target.value)}
                                 className="mr-2"
+                                required
                             />
                             Tumor Markers
                         </label>
@@ -111,6 +127,7 @@ const UpdateReportForm = () => {
                                 checked={testType === 'X-Ray'}
                                 onChange={(e) => setTestType(e.target.value)}
                                 className="mr-2"
+                                required
                             />
                             X-Ray
                         </label>
@@ -122,6 +139,7 @@ const UpdateReportForm = () => {
                                 checked={testType === 'MRI'}
                                 onChange={(e) => setTestType(e.target.value)}
                                 className="mr-2"
+                                required
                             />
                             MRI
                         </label>
@@ -133,6 +151,7 @@ const UpdateReportForm = () => {
                                 checked={testType === 'CT Scan'}
                                 onChange={(e) => setTestType(e.target.value)}
                                 className="mr-2"
+                                required
                             />
                             CT Scan
                         </label>
@@ -149,6 +168,7 @@ const UpdateReportForm = () => {
                                 checked={testType === 'Anatomical Pathology'}
                                 onChange={(e) => setTestType(e.target.value)}
                                 className="mr-2"
+                                required
                             />
                             Anatomical Pathology
                         </label>
@@ -160,6 +180,7 @@ const UpdateReportForm = () => {
                                 checked={testType === 'Clinical Pathology'}
                                 onChange={(e) => setTestType(e.target.value)}
                                 className="mr-2"
+                                required
                             />
                             Clinical Pathology
                         </label>
@@ -171,6 +192,7 @@ const UpdateReportForm = () => {
                                 checked={testType === 'Molecular Pathology'}
                                 onChange={(e) => setTestType(e.target.value)}
                                 className="mr-2"
+                                required
                             />
                             Molecular Pathology
                         </label>
@@ -180,6 +202,11 @@ const UpdateReportForm = () => {
                 return null;
         }
     };
+
+    // Loading state
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="container mx-auto p-6">
@@ -202,7 +229,10 @@ const UpdateReportForm = () => {
                     <label className="block text-gray-700 text-sm font-bold mb-2">Report Type</label>
                     <select
                         value={reportType}
-                        onChange={(e) => setReportType(e.target.value)}
+                        onChange={(e) => {
+                            setReportType(e.target.value);
+                            setTestType(''); // Reset test type when report type changes
+                        }}
                         className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <option value="">Select Report Type</option>
@@ -228,6 +258,7 @@ const UpdateReportForm = () => {
                         value={reportIssuedDate}
                         onChange={(e) => setReportIssuedDate(e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
                     />
                 </div>
 

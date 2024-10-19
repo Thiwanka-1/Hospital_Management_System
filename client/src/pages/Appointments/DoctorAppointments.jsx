@@ -179,7 +179,7 @@ const DoctorAppointments = () => {
                                 <td className="py-3 px-6">{appointment.patientName}</td>
                                 <td className="py-3 px-6">{new Date(appointment.date).toLocaleDateString()}</td>
                                 <td className="py-3 px-6">{appointment.time}</td>
-                                <td className="py-3 px-6">${appointment.channelingCost}</td>
+                                <td className="py-3 px-6">Rs. {appointment.channelingCost}</td>
                             </tr>
                         ))}
                     </tbody>

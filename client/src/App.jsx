@@ -25,6 +25,8 @@ import UploadReportForm from './pages/reports/uploadReport';
 import SearchPatients from './pages/reports/searchPatients';
 import ViewReportsByDoctor from './pages/reports/viewReportsByDoctor';
 import UpdateReportForm from './pages/reports/updateReportDoctor';
+import ViewReportsByPatient from './pages/reports/viewReportsByPatients';
+
 import ViewMessages from './pages/ViewMessages';
 
 import TreatmentHome from "./pages/Treatment/TreatmentHome";
@@ -49,6 +51,8 @@ export default function App() {
         <Route path="/appointments/my" element={<UserAppointments />} />
         <Route path="/appointments/update/:id" element={<UpdateAppointment />} /> 
         <Route path="/patient-treatment" element={<PatientTreatment />} />
+        <Route path="/view-reports-patient" element={<ViewReportsByPatient />} />
+
 
       </Route>
 
