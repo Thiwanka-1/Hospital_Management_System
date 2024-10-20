@@ -15,6 +15,7 @@ import reportRoutes from './routes/report.route.js';
 import contactRoutes from './routes/contactRoutes.js';
 import treatmentRoutes from "./routes/treatment.route.js";
 
+import supportRoutes from "./routes/supportRoutes.js";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -57,6 +58,7 @@ app.use('/api/appointments', appointmentRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api', contactRoutes);
 app.use("/api/treatments", treatmentRoutes);
+app.use("/api/support", supportRoutes);
 
 // Global error handling middleware
 app.use((err, req, res, next) => {

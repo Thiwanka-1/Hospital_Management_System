@@ -40,6 +40,7 @@ export default function DoctorForm() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({}); // State for field-specific errors
+  const [showPassword, setShowPassword] = useState(false); // State for showing/hiding password
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -144,6 +145,10 @@ export default function DoctorForm() {
     }));
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(prevState => !prevState);
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-5">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
@@ -157,11 +162,6 @@ export default function DoctorForm() {
               placeholder="Enter doctor's name"
               value={name}
               onChange={handleNameChange}
-              onKeyDown={(e) => {
-                if (!/^[A-Za-z\s]*$/.test(e.key) && e.key !== "Backspace" && e.key !== "Tab" && e.key !== "Delete" && e.key !== "ArrowLeft" && e.key !== "ArrowRight") {
-                  e.preventDefault();
-                }
-              }}
               required
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -268,14 +268,22 @@ export default function DoctorForm() {
 
           <div>
             <label className="block text-gray-600">Password</label>
-            <input
-              type="password"
-              placeholder="Enter password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button 
+                type="button" 
+                onClick={togglePasswordVisibility} 
+                className="absolute right-2 top-2 text-gray-600">
+                {showPassword ? 'Hide' : 'Show'}
+              </button>
+            </div>
           </div>
 
           <button

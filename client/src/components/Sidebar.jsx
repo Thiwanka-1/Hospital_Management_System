@@ -42,6 +42,11 @@ export default function Sidebar() {
                 Treatment Management
               </Link>
             </li>
+            <li className="mb-4">
+              <Link to="/views" className="hover:text-gray-300">
+                Support Messages.
+              </Link>
+            </li>
           </>
         )}
 

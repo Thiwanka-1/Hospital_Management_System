@@ -8,10 +8,15 @@ import app from '../app.js'; // Your app file
 import User from '../models/user.model.js';
 
 beforeAll(async () => {
-    await mongoose.connect(process.env.MONGO_TEST, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    });
+    try {
+        await mongoose.connect(process.env.MONGO_TEST, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log('Connected to MongoDB for testing');
+    } catch (error) {
+        console.error('Error connecting to MongoDB:', error);
+    }
 });
 
 afterEach(async () => {
@@ -100,5 +105,4 @@ describe('User Controller', () => {
         expect(response.body.success).toBe(false);
         expect(response.body.message).toMatch(/All fields are required/); // Update with the exact message returned
     });
-    
 });

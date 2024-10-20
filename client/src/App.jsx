@@ -33,6 +33,13 @@ import TreatmentHome from "./pages/Treatment/TreatmentHome";
 import Treatment from "./pages/Treatment/TreatmentPage";
 import PatientTreatment from "./pages/Treatment/PatientTreatment";
 
+import AddSupportMessage from "./pages/chat/AddSupportMessage";
+import SupportMessages from "./pages/chat/SupportMessages";
+import UserConversations from "./pages/chat/UserConversations";
+import ConversationDetail from "./pages/chat/ConversationDetail";
+import MDashboard from "./pages/chat/MDashboard";
+import MeDashboard from "./pages/chat/MeDashboard";
+
 
 
 export default function App() {
@@ -44,6 +51,12 @@ export default function App() {
       <Route path = "/contact" element = {<ContactUs />} />
       <Route path = "/sign-in" element = {<SignIn />} />
       <Route path = "/sign-up" element = {<SignUp />} />
+
+      <Route path="/my-conversations" element={<UserConversations />} />
+      <Route path="/conversation/:id" element={<ConversationDetail />} />
+      <Route path = "/MDashboard" element = {<MDashboard />} />
+      <Route path = "/MeDashboard" element = {<MeDashboard />} />
+      <Route path = "/adds" element = {<AddSupportMessage />} />
 
       <Route element={<PrivateRoute />}>
         <Route path = "/profile" element = {<Profile />} />
@@ -64,6 +77,7 @@ export default function App() {
         <Route path='/messages' element={<ViewMessages />} />
         <Route path="/treatment" element={<TreatmentHome />} />
         <Route path="/treatment-list/:userId" element={<Treatment />} />
+        <Route path = "/views" element = {<SupportMessages />} />
 
       </Route>
 

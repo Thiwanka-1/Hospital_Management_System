@@ -33,20 +33,9 @@ const UploadReportForm = () => {
                 withCredentials: true,
             });
 
-            if (res.data.success) {
-                // Show success message and clear form fields
-                setSuccessMessage('Your report has been submitted successfully.');
-                setReportType('');
-                setTestType('');
-                setReportIssuedDate('');
-                setReportFile(null);
-                setErrorMessage('');
-
-                // Navigate after 3 seconds (if desired)
-                setTimeout(() => {
-                    setSuccessMessage('');
-                    navigate('/view-reports-doctor');
-                }, 3000);
+            if (res.data.message) {
+                alert('Your report has been uploaded successfully.');
+                navigate('/view-Reports-doctor'); // Redirect to view reports
             }
         } catch (err) {
             console.error('Error during form submission:', err);
@@ -170,14 +159,14 @@ const UploadReportForm = () => {
     };
 
     return (
-        <div className="container mx-auto p-6 bg-gray-50 rounded-lg shadow-lg">
+        <div className=" mx-auto p-6 mt-20">
             <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">Upload Medical Records</h2>
 
             {/* Success and Error Messages */}
             {successMessage && <p className="text-green-600 text-center mb-4">{successMessage}</p>}
             {errorMessage && <p className="text-red-600 text-center mb-4">{errorMessage}</p>}
 
-            <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg space-y-6">
+            <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-xl space-y-6">
                 {/* Patient Name (read-only) */}
                 <div>
                     <label className="block text-gray-700 text-sm font-bold mb-2">Patient Name</label>

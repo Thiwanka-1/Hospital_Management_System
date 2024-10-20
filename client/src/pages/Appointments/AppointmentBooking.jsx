@@ -19,7 +19,7 @@ const AppointmentBooking = () => {
     const [selectedDoctor, setSelectedDoctor] = useState('');
     const [patientName, setPatientName] = useState('');
     const [appointmentDetails, setAppointmentDetails] = useState(null);
-    const [errorMessages, setErrorMessages] = useState([]); // Combined error messages
+    const [errorMessage, setErrorMessage] = useState(''); // Single error message
 
     const navigate = useNavigate();
 
@@ -33,13 +33,13 @@ const AppointmentBooking = () => {
 
             if (data.length > 0) {
                 setFilteredDoctors(data);
-                clearError('doctorAvailability');
+                setErrorMessage(''); // Clear any existing error
             } else {
                 setFilteredDoctors([]);
-                addError('doctorAvailability', 'No doctors available for the selected date and specialization.');
+                setErrorMessage('No doctors available for the selected date and specialization.');
             }
         } catch (error) {
-            addError('doctorAvailability', 'Error fetching available doctors.');
+            setErrorMessage('Error fetching available doctors.');
         }
     };
 
@@ -52,26 +52,26 @@ const AppointmentBooking = () => {
         const regex = /^[a-zA-Z\s]*$/; // Regex to allow only letters and spaces
         if (regex.test(value)) {
             setPatientName(value); // Update state if valid
-            clearError('patientName');
+            setErrorMessage(''); // Clear error if input is valid
         } else {
-            addError('patientName', 'Patient name can only contain letters and spaces.');
+            setErrorMessage('Patient name can only contain letters and spaces.');
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         if (!selectedDoctor) {
-            addError('doctor', 'Please select a doctor.');
+            setErrorMessage('Please select a doctor.');
             return;
         }
-    
+
         const userId = currentUser._id;
         if (!userId) {
             console.error('Invalid user ID');
             return;
         }
-    
+
         const appointmentData = {
             userId,
             doctorId: selectedDoctor,
@@ -79,9 +79,9 @@ const AppointmentBooking = () => {
             channelingCost: filteredDoctors.find(doc => doc._id === selectedDoctor)?.channelingCost,
             patientName,
         };
-    
+
         console.log(appointmentData); // Log appointment data
-    
+
         try {
             const response = await fetch('http://localhost:3000/api/appointments', {
                 method: 'POST',
@@ -90,7 +90,7 @@ const AppointmentBooking = () => {
                 },
                 body: JSON.stringify(appointmentData),
             });
-    
+
             const result = await response.json();
             if (result.success) {
                 const selectedDoctorDetails = filteredDoctors.find((doc) => doc._id === selectedDoctor);
@@ -98,22 +98,21 @@ const AppointmentBooking = () => {
                     ...result.newAppointment,
                     doctorName: selectedDoctorDetails?.name,
                 });
-                setErrorMessages([]);
+                setErrorMessage(''); // Clear error messages on success
+
+                // Clear form fields
+                setSelectedDate('');
+                setSelectedSpecialization('');
+                setFilteredDoctors([]);
+                setSelectedDoctor('');
+                setPatientName('');
             } else {
-                addError('submission', result.message);
+                setErrorMessage(result.message); // Show server error message
             }
         } catch (error) {
             console.error(error); // Log the error
-            addError('submission', 'Error booking appointment.');
+            setErrorMessage('Error booking appointment.');
         }
-    };
-    
-    const addError = (field, message) => {
-        setErrorMessages((prevMessages) => [...prevMessages.filter((err) => err.field !== field), { field, message }]);
-    };
-
-    const clearError = (field) => {
-        setErrorMessages((prevMessages) => prevMessages.filter((err) => err.field !== field));
     };
 
     useEffect(() => {
@@ -175,12 +174,10 @@ const AppointmentBooking = () => {
                     </select>
                 </div>
 
-                {/* Display all error messages under the form */}
-                {errorMessages.length > 0 && (
+                {/* Display error message */}
+                {errorMessage && (
                     <div className="bg-red-100 p-4 rounded-lg mb-6">
-                        {errorMessages.map((error, idx) => (
-                            <p key={idx} className="text-red-500 text-sm">{error.message}</p>
-                        ))}
+                        <p className="text-red-500 text-sm">{errorMessage}</p>
                     </div>
                 )}
 

@@ -5,15 +5,14 @@ import { errorHandler } from "../utils/error.js";
 
 // Initialize transporter only if not in test environment
 let transporter;
-if (process.env.NODE_ENV !== "test") {
-  transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "sachinthaakarawita@gmail.com",
-      pass: "qzir naio drrq tnvk",
-    },
-  });
-}
+
+transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "sachinthaakarawita@gmail.com",
+    pass: "qzir naio drrq tnvk",
+  },
+});
 
 export const addTreatment = async (req, res, next) => {
   const { treatmentName, patientId, prescribedDate, doctorName, description } =
@@ -42,10 +41,10 @@ export const addTreatment = async (req, res, next) => {
 
     // Fetch the patient's email
     const patient = await User.findById(patientId);
-    if (process.env.NODE_ENV !== "test" && patient && patient.email) {
+    if (transporter && patient && patient.email) {
       // Send an email notification
       const mailOptions = {
-        from: "sachinthaakarawita@gmail.com", // Update to match the user in transporter
+        from: "sachinthaakarawita@gmail.com",
         to: patient.email,
         subject: "New Treatment Added",
         text: `Dear ${patient.username},\n\nA new treatment "${treatmentName}" has been added to your record.\n\nBest Regards,\nYour Health Care Team`,

@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector } from 'react-redux';
 import logo from "./logo.png";
-import { useState, useEffect, useRef } from "react";
-import axios from "axios"; // Import axios for API call
+import { useState, useEffect, useRef } from 'react';
+import axios from 'axios'; // Import axios for API call
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
@@ -30,7 +30,7 @@ export default function Header() {
 
   // Toggle dropdown visibility for user profile
   const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
+    setDropdownOpen((prev) => !prev);
   };
 
   // Toggle mobile menu visibility
@@ -72,8 +72,8 @@ export default function Header() {
   };
 
   return (
-    <div className="bg-slate-200 z-50"> {/* Add z-index here */}
-      <div className="flex justify-between items-center max-w-full mx-auto py-2 px-9 h-20"> {/* Fixed height of 20 */}
+    <div className="bg-white shadow-md z-50"> {/* Improved background and shadow */}
+      <div className="flex justify-between items-center max-w-full mx-auto py-4 px-9 h-20"> {/* Increased padding */}
         {/* Left Section: Logo */}
         <div className="flex items-center space-x-1">
           <Link to="/">
@@ -82,24 +82,55 @@ export default function Header() {
         </div>
 
         {/* Right Section: Navigation Links */}
-        <div className="hidden md:flex gap-3 items-center">
-          <ul className="flex gap-3 items-center">
+        <div className="hidden md:flex gap-5 items-center relative">
+          <ul className="flex gap-5 items-center">
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/" className="hover:text-indigo-600 transition">Home</Link>
             </li>
             <li>
-              <Link to="/about">About Us</Link>
+              <Link to="/about" className="hover:text-indigo-600 transition">About Us</Link>
             </li>
             <li>
-              <Link to="/patient-treatment">My Treatment</Link>
+              <Link to="/patient-treatment" className="hover:text-indigo-600 transition">My Treatment</Link>
             </li>
             <li>
-              <Link to="/contact">Contact Us</Link>
+              <Link to="/contact" className="hover:text-indigo-600 transition">Contact Us</Link>
+            </li>
+            <li>
+              <Link to="/adds" className="hover:text-indigo-600 transition">Chat Us</Link>
+            </li>
+            
+            {/* Dropdown for Health Dashboards */}
+            <li className="relative">
+              <button onClick={toggleDropdown} className="hover:text-indigo-600 transition focus:outline-none">
+                Health Dashboards
+              </button>
+              {dropdownOpen && (
+                <div
+                  ref={dropdownRef}
+                  className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10"
+                >
+                  <Link
+                    to="/MDashboard"
+                    className="block px-4 py-2 text-gray-800 hover:bg-indigo-100"
+                    onClick={() => { setDropdownOpen(false); }} // Close dropdown on link click
+                  >
+                    Physical Dashboard
+                  </Link>
+                  <Link
+                    to="/MeDashboard"
+                    className="block px-4 py-2 text-gray-800 hover:bg-indigo-100"
+                    onClick={() => { setDropdownOpen(false); }} // Close dropdown on link click
+                  >
+                    Mental Dashboard
+                  </Link>
+                </div>
+              )}
             </li>
 
             {currentUser ? (
               <li>
-                <Link to={getProfileLink()}>
+                <Link to={getProfileLink()} className="relative">
                   <img
                     src={getProfilePicture()} // Get profile picture dynamically
                     alt="profile"
@@ -109,7 +140,7 @@ export default function Header() {
               </li>
             ) : (
               <li>
-                <Link to="/sign-in">Sign In</Link>
+                <Link to="/sign-in" className="hover:text-indigo-600 transition">Sign In</Link>
               </li>
             )}
           </ul>
@@ -137,52 +168,70 @@ export default function Header() {
       </div>
 
       {/* Mobile Menu Dropdown */}
-      {/* Mobile Menu Dropdown */}
-{menuOpen && (
-  <div className="md:hidden bg-slate-100 h-auto z-50">
-    <ul className="flex flex-col space-y-2 p-4 items-end"> {/* Align items to the right */}
-      <li>
-        <Link to="/" onClick={() => setMenuOpen(false)}>
-          Home
-        </Link>
-      </li>
-      <li>
-        <Link to="/about" onClick={() => setMenuOpen(false)}>
-          About Us
-        </Link>
-      </li>
-      <li>
-        <Link to="/patient-treatment" onClick={() => setMenuOpen(false)}>
-          My Treatment
-        </Link>
-      </li>
-      <li>
-        <Link to="/contact" onClick={() => setMenuOpen(false)}>
-          Contact Us
-        </Link>
-      </li>
+      {menuOpen && (
+        <div className="md:hidden bg-slate-100 h-auto z-50">
+          <ul className="flex flex-col space-y-2 p-4 items-end"> {/* Align items to the right */}
+            <li>
+              <Link to="/" onClick={() => { setMenuOpen(false); }} className="hover:text-indigo-600 transition">Home</Link>
+            </li>
+            <li>
+              <Link to="/about" onClick={() => { setMenuOpen(false); }} className="hover:text-indigo-600 transition">About Us</Link>
+            </li>
+            <li>
+              <Link to="/patient-treatment" onClick={() => { setMenuOpen(false); }} className="hover:text-indigo-600 transition">My Treatment</Link>
+            </li>
+            <li>
+              <Link to="/contact" onClick={() => { setMenuOpen(false); }} className="hover:text-indigo-600 transition">Contact Us</Link>
+            </li>
+            <li>
+              <Link to="/adds" onClick={() => { setMenuOpen(false); }} className="hover:text-indigo-600 transition">Chat Us</Link>
+            </li>
+            
+            <li className="relative">
+              <button onClick={toggleDropdown} className="hover:text-indigo-600 transition focus:outline-none">
+                Health Dashboards
+              </button>
+              {dropdownOpen && (
+                <div
+                  ref={dropdownRef}
+                  className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10"
+                >
+                  <Link
+                    to="/MDashboard"
+                    onClick={() => { setMenuOpen(false); setDropdownOpen(false); }} // Close dropdown on link click
+                    className="block px-4 py-2 text-gray-800 hover:bg-indigo-100"
+                  >
+                    Physical Dashboard
+                  </Link>
+                  <Link
+                    to="/MeDashboard"
+                    onClick={() => { setMenuOpen(false); setDropdownOpen(false); }} // Close dropdown on link click
+                    className="block px-4 py-2 text-gray-800 hover:bg-indigo-100"
+                  >
+                    Mental Dashboard
+                  </Link>
+                </div>
+              )}
+            </li>
 
-      {currentUser ? (
-        <li>
-          <Link to={getProfileLink()} onClick={() => setMenuOpen(false)}>
-            <img
-              src={getProfilePicture()} // Get profile picture dynamically
-              alt="profile"
-              className="h-8 w-8 rounded-full object-cover"
-            />
-          </Link>
-        </li>
-      ) : (
-        <li>
-          <Link to="/sign-in" onClick={() => setMenuOpen(false)}>
-            Sign In
-          </Link>
-        </li>
+            {currentUser ? (
+              <li>
+                <Link to={getProfileLink()} onClick={() => { setMenuOpen(false); }} className="relative">
+                  <img
+                    src={getProfilePicture()} // Get profile picture dynamically
+                    alt="profile"
+                    className="h-8 w-8 rounded-full object-cover"
+                  />
+                </Link>
+              </li>
+            ) : (
+              <li>
+                <Link to="/sign-in" onClick={() => { setMenuOpen(false); }} className="hover:text-indigo-600 transition">Sign In</Link>
+              </li>
+            )}
+          </ul>
+        </div>
       )}
-    </ul>
-  </div>
-)}
-
     </div>
   );
 }

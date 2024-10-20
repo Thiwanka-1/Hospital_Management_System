@@ -24,12 +24,16 @@ export const signup = async (req, res, next) => {
   const newUser = new User({ username, name, email, password: hashedPassword });
 
   try {
-      await newUser.save();
-      res.status(201).json({ message: 'User created successfully' });
+      const savedUser = await newUser.save(); // Save the user to the database
+      res.status(201).json({
+          message: 'User created successfully',
+          user: savedUser // Include the created user in the response
+      });
   } catch (error) {
       next(error); // Pass the error to the error handling middleware
   }
 };
+
 
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;

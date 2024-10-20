@@ -88,7 +88,7 @@ const DoctorAppointments = () => {
                 appointment.patientName,
                 new Date(appointment.date).toLocaleDateString(),
                 appointment.time,
-                `$${appointment.channelingCost}`,
+                `Rs. ${appointment.channelingCost}`,
             ]),
         });
     
@@ -97,7 +97,7 @@ const DoctorAppointments = () => {
         doc.setTextColor(40, 167, 69); // Green color for total information
         const finalY = doc.lastAutoTable.finalY + 10; // Position based on the last table Y position
         doc.text(`Total Patients: ${totalPatients}`, 14, finalY);
-        doc.text(`Total Earnings: $${totalEarnings}`, 14, finalY + 10);
+        doc.text(`Total Earnings: Rs. ${totalEarnings}`, 14, finalY + 10);
     
         // Save the generated PDF
         doc.save('doctor_appointments_current_week.pdf');

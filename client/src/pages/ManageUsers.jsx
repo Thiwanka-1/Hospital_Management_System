@@ -98,57 +98,59 @@ export default function ManageUsers() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="text-center">Loading...</div>;
   }
 
   if (error) {
-    return <div className="text-red-500">{error}</div>;
+    return <div className="text-red-500 text-center">{error}</div>;
   }
 
   return (
     <div className="max-w-4xl mx-auto p-5">
       <h1 className="text-3xl font-bold mb-6 text-center">Registered Users</h1>
-      <table className="min-w-full bg-white border border-gray-200">
-        <thead>
-          <tr>
-            <th className="py-2 px-4 border-b">Profile Picture</th>
-            <th className="py-2 px-4 border-b">Username</th>
-            <th className="py-2 px-4 border-b">Email</th>
-            <th className="py-2 px-4 border-b">Role</th>
-            <th className="py-2 px-4 border-b">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user._id}>
-              <td className="py-2 px-4 border-b">
-                <img
-                  src={user.profilePicture}
-                  alt="profile"
-                  className="h-10 w-10 rounded-full object-cover"
-                />
-              </td>
-              <td className="py-2 px-4 border-b">{user.username}</td>
-              <td className="py-2 px-4 border-b">{user.email}</td>
-              <td className="py-2 px-4 border-b">{user.isAdmin ? 'Admin' : 'Patient'}</td>
-              <td className="py-2 px-4 border-b">
-                <button
-                  onClick={() => deleteUser(user._id)}
-                  className="bg-red-500 text-white py-1 px-2 rounded-lg"
-                >
-                  Delete
-                </button>
-              </td>
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-200">
+          <thead>
+            <tr>
+              <th className="py-2 px-4 border-b">Profile Picture</th>
+              <th className="py-2 px-4 border-b">Username</th>
+              <th className="py-2 px-4 border-b">Email</th>
+              <th className="py-2 px-4 border-b">Role</th>
+              <th className="py-2 px-4 border-b">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user._id}>
+                <td className="py-2 px-4 border-b">
+                  <img
+                    src={user.profilePicture}
+                    alt="profile"
+                    className="h-10 w-10 rounded-full object-cover"
+                  />
+                </td>
+                <td className="py-2 px-4 border-b">{user.username}</td>
+                <td className="py-2 px-4 border-b">{user.email}</td>
+                <td className="py-2 px-4 border-b">{user.isAdmin ? 'Admin' : 'Patient'}</td>
+                <td className="py-2 px-4 border-b">
+                  <button
+                    onClick={() => deleteUser(user._id)}
+                    className="bg-red-500 text-white py-1 px-2 rounded-lg"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* Generate PDF Button centered below the table */}
       <div className="flex justify-center mt-6">
         <button
           onClick={generatePDF}
-          className="bg-blue-500 text-white py-2 px-4 rounded-lg"
+          className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200"
         >
           Generate PDF Report
         </button>

@@ -33,12 +33,17 @@ const UserAppointments = () => {
     }, [userId]);
 
     const handleCancel = async (id) => {
+        // Confirmation dialog
+        const confirmDelete = window.confirm("Are you sure you want to cancel this appointment?");
+        if (!confirmDelete) return; // If user cancels, do not proceed
+
         const response = await fetch(`/api/appointments/${id}`, {
             method: 'DELETE',
         });
 
         if (response.ok) {
-            setAppointments(appointments.filter(appointment => appointment._id !== id));
+            // Refetch appointments after deletion
+            fetchUserAppointments(); // Call the function to fetch the updated list of appointments
         } else {
             setErrorMessage('Error canceling appointment.');
         }
